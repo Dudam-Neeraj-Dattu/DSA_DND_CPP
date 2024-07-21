@@ -1,0 +1,16 @@
+https://www.naukri.com/code360/problems/duplicate-in-array_893397
+
+int findDuplicate(vector<int> &arr) 
+{
+    // Write your code here
+    int ans = 0;
+    for(int i : arr) {
+        ans ^= i;
+    }
+
+    for(int i = 1; i < arr.size(); i++) {
+        ans ^= i;
+    }
+    return ans;
+	
+}

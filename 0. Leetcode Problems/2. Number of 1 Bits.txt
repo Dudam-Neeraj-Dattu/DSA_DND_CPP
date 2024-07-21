@@ -1,0 +1,15 @@
+// https://leetcode.com/problems/number-of-1-bits/
+
+class Solution {
+public:
+    int hammingWeight(int n) {
+        int count = 0;
+        string s = bitset<128>(n).to_string();
+        for(char c : s) {
+            if(c == '1') {
+                count++;
+            }
+        }
+        return count;
+    }
+};

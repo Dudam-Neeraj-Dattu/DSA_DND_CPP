@@ -1,0 +1,47 @@
+https://www.naukri.com/code360/problems/allocate-books_1090540
+
+int findPages(vector<int>& arr, int n, int m) {
+    // Write your code here.
+    if(m > n) {
+        return -1;
+    }
+    int sum = 0;
+    for(int i : arr) {
+        sum += i;
+    }
+    int start = 0, end = sum, mid, minofmax = 0;
+    // cout << sum << "\n";
+    while(start <= end) {
+        mid = (start + end) / 2;
+        // cout << mid << endl; 
+        int currsum = 0, partitions = 1;
+        bool flag = false;
+        for(int i = 0; i < n; i++) {            
+            if(currsum + arr[i] <= mid) {
+                currsum += arr[i];          
+            }   
+            else {
+                partitions++;
+                currsum = arr[i];
+                if(partitions > m || arr[i] > mid) {
+                    flag = true;
+                    break;
+                }
+            }            
+            if(partitions > m) {
+                flag = true;
+                break;
+            }
+        }
+        // cout << partitions << endl;
+        if(!flag) {
+            minofmax = mid;
+            end = mid - 1;
+        }
+        else {
+            start = mid + 1;
+        }        
+    }
+    return minofmax;
+    
+}
