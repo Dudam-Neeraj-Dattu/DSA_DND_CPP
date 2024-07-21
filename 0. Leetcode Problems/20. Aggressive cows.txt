@@ -1,0 +1,31 @@
+https://www.naukri.com/code360/problems/aggressive-cows_1082559
+
+int aggressiveCows(vector<int> &stalls, int k)
+{
+    //    Write your code here.
+    sort(stalls.begin(), stalls.end());
+    int maxdist = stalls[stalls.size() - 1];
+    int start = 0, end = maxdist, mid, ans;
+    while(start <= end) {
+        mid = (start + end) / 2;
+        int cows = 1, currloc = stalls[0], flag = false;
+        for(int i = 1; i < stalls.size(); i++) {
+            if(stalls[i] - currloc >= mid) {
+                cows++;
+                currloc = stalls[i];
+                if(cows == k) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        if(flag) {
+            ans = mid;
+            start = mid + 1;
+        }
+        else {
+            end = mid - 1;
+        }        
+    }
+    return ans;
+}
