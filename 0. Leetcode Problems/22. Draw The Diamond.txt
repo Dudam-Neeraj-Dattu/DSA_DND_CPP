@@ -1,0 +1,72 @@
+https://www.naukri.com/code360/problems/draw-the-diamond_3169339
+
+void printTheDiamond(int r, int c, int s)
+{
+	// Write your code here.
+	char a[s * 2][s * 2];
+	for(int i = 0; i < s * 2; i++) {
+		for(int j = 0; j < s * 2; j++) {
+			a[i][j] = '*';
+		}		
+	}
+	for(int i = 0; i < s; i++) {
+		for(int j = 0; j < s - i - 1; j++) {
+			a[i][j] = 'e';
+		}
+		for(int j = s + 1 + i; j < (s * 2); j++) {
+			a[i][j] = 'e';
+		}
+	}
+	int jump = 0;
+	for(int i = s; i < (s * 2); i++) {
+		for(int j = 0; j < i - s; j++) {
+			a[i][j] = 'e';
+		}		
+		for(int j = (s * 2) - jump; j < (s * 2); j++) {
+			a[i][j] = 'e';			
+		}		
+		jump++;
+	}
+	jump = 1;
+	for(int i = 0; i < s; i++) {
+		a[i][s - jump] = '/';
+		a[i][s + jump - 1] = '\\';
+		jump++;
+	}
+	jump = 0;
+	for(int i = s; i < s * 2; i++) {
+		a[i][jump] = '\\';
+		a[i][(s * 2) - jump - 1] = '/';
+		jump++;
+	}
+	jump = 1;
+	if(s > 1) {
+		for(int i = 1; i < s; i++) {
+			for(int j = (s - jump); j < (s + jump); j++) {
+				a[i][j] = 'o';
+			}
+			jump++;			
+		}
+		jump--;		
+		for(int i = s; i < s * 2; i++) {
+			for(int j = (s - jump); j < (s + jump); j++) {
+				a[i][j] = 'o';
+			}
+			jump--;
+		}
+	}
+	char ans[(s * 2) * r][(s * 2) * c];
+
+	for(int i = 0; i < s * 2 * r; i++) {
+		for(int j = 0; j < s * 2 * c; j++) {
+			ans[i][j] = a[i % (s * 2)][j % (s * 2)];			
+		}		
+	}
+
+	for(int i = 0; i < s * 2 * r; i++) {
+		for(int j = 0; j < s * 2 * c; j++) {
+			cout << ans[i][j];
+		}
+		cout << endl;
+	}		
+}
