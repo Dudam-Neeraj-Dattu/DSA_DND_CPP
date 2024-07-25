@@ -1,0 +1,27 @@
+https://www.geeksforgeeks.org/problems/maximum-occuring-character-1587115620/1
+
+class Solution
+{
+    public:
+    //Function to find the maximum occurring character in a string.
+    char getMaxOccuringChar(string str)
+    {
+        // Your code here
+        int a[26] = {0};
+        for(char c : str) {
+            a[c - 'a']++;
+        }
+        char c = 'a';
+        int b = a[0];
+        for(int i = 1; i < 26; i++) {
+            if(a[i] > b) {
+                c = 'a' + i;
+                b = a[i];
+            }
+        }
+        // cout << c;
+        return c;
+        
+    }
+
+};

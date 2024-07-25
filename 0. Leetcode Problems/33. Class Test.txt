@@ -1,0 +1,29 @@
+Problem statement
+Ninja recently appeared for a class test. The test was attended by ‘N’ students and the marks of each student was given in an array ‘A’.
+
+Ninja knows that he got a rank ‘K’ among the ‘N’ students but forgot the marks achieved by him. The ranks are given according to the better marks scored by the students.
+
+Tell the marks that must have been scored by Ninja to get a rank ‘K’.
+
+Example :
+N = 5
+K = 3
+A = [ 2, 5, 4, 4, 5 ]
+
+Rank 1 and Rank 2 students get marks = 5.
+Rank 3 and Rank 4 students get marks = 4.
+Rank 5 student gets marks = 2.
+
+So, Ninja must have scored 4 marks in order to achieve Rank = 3.
+
+
+#include <bits/stdc++.h> 
+int classTest(int n, vector<int> &a, int k) {
+    // Write your code here.
+    sort(a.begin(), a.end());
+    vector<int> v;
+    for(int i = n - 1; i >= 0; i--) {
+        v.push_back(a[i]);
+    }
+    return v[k - 1];
+}

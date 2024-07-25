@@ -1,0 +1,22 @@
+https://leetcode.com/problems/valid-palindrome/
+
+class Solution {
+public:
+    bool isPalindrome(string s) {
+        string S = "";
+        for (char c : s) {
+            if((c >= 'A' && c <= 'Z')) {
+                S += c + 32;
+            }
+            else if((c >= '0' && c <= '9')) {
+                S += c;
+            }
+            else if((c >= 'a' && c <= 'z')) {
+                S += c;
+            }        
+        }        
+        string SS = S;
+        reverse(S.begin(), S.end());        
+        return (S == SS);
+    }
+};
