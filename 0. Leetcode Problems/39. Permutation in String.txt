@@ -1,0 +1,36 @@
+https://leetcode.com/problems/permutation-in-string/
+
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        if(s2.length() < s1.length()) {return false;}
+        if(s1.length() == 1) {
+            for(char c : s2) {
+                if(c == s1[0]) {return true;}
+            }
+            return false;
+        }
+        vector<int> b(26, 0);
+        for(char c : s1) {
+            b[c - 'a']++;
+        }
+        vector<int> a(26, 0);
+        int window = 1;
+        a[s2[0] - 'a']++;        
+        int j = 0;
+        for(int i = 1; i < s2.length(); i++) {
+            window++;
+            a[s2[i] - 'a']++;
+            if(window == s1.length()) {                
+                if(a == b) {
+                    return true;
+                }
+                else{
+                    a[s2[j++] - 'a']--;
+                    window--;
+                }
+            }
+        }
+        return false;
+    }
+};

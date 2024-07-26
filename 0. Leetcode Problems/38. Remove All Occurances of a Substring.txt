@@ -1,0 +1,42 @@
+https://leetcode.com/problems/remove-all-occurrences-of-a-substring/
+
+class Solution {
+public:
+
+    bool samestring(vector<char> &c, string part, int index) {
+        int part_index = 0;
+        while(index < c.size() && part_index < part.length()) {
+            if(c[index++] != part[part_index++]) {
+                return false;
+            }            
+        }
+        return true;
+    }
+
+    string removeOccurrences(string s, string part) {
+        vector<char> C;
+        for(char c : s) {
+            C.push_back(c);
+        }
+        int i = 0;
+        while(i <= C.size() - part.length() && C.size() >= part.length()) {
+            if(C[i] == part[0]) {
+                if(samestring(C, part, i)) {
+                    C.erase(C.begin() + i, C.begin() + i + part.length());
+                    i = 0;
+                }             
+                else{
+                    i++;
+                }
+            }           
+            else{
+                i++;
+            } 
+        }
+        s = "";
+        for(char c : C) {
+            s += c;
+        }
+        return s;
+    }
+};

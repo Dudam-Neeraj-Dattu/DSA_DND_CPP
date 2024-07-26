@@ -1,0 +1,19 @@
+https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
+
+class Solution {
+public:
+    string removeDuplicates(string s) {
+        int prev_i = 0, i = 0;
+        while(i < s.length()) {
+            if(s[i] == s[i + 1]) {
+                s.erase(s.begin() + i);
+                s.erase(s.begin() + i);
+                i = prev_i;
+            }
+            else{
+                i++;
+            }
+        }
+        return s;
+    }
+};
