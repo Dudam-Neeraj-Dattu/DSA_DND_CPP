@@ -1,0 +1,22 @@
+https://www.naukri.com/code360/problems/reverse-the-string_799927
+
+#include <bits/stdc++.h> 
+
+void stringReverse(string &s, int start, int n) {
+    if(start >= n) {
+        return;
+    }
+    else {
+        swap(s[start], s[n - 1]);
+        stringReverse(s, start + 1, n - 1);
+    }
+}
+
+string reverseString(string s)
+{
+	// Write your code here.
+	stringReverse(s, 0, s.length());
+
+	return s;
+
+}

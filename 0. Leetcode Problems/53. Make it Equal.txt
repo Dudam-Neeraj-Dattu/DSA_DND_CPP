@@ -1,0 +1,67 @@
+Ninja recently learned the bitwise operations and he now heads toward solving another interesting problem.
+
+You are given three integers ‘A’, ‘B’ and ‘C’. In one move you can flip any bit in the binary representation of ‘A’ or ‘B’. Return the minimum number of moves required to make ‘A & B = c’ . Here, ‘&’ denotes the bitwise ‘AND’ operator.
+
+Flip operation consists of changing any single bit from 1 to 0 or 0 to 1 in their binary representation.
+
+Output the minimum moves required to make ‘A & B’ = ‘C’.
+
+Sample Input 1 :
+2
+3 1 2
+2 6 5
+Sample Output 1 :
+2
+4
+Explanation Of Sample Input 1 :
+For test case 1 we have, 
+
+We can change ‘A = 3’ from ‘11’ to ‘10’ in 1 move and ‘B = 1’ from ‘01’ to ‘11’ in 1 move.
+
+So, now ‘A & B = C’.
+
+So, we output 2.
+
+For test case 2 we have, 
+
+We can change ‘A = 2’ from ‘010’ to ‘101’ in 3 moves and ‘B = 6’ from ‘110’ to ‘111’ in 1 move.
+
+So, now ‘A & B = C’.
+
+So, we output 4.
+Sample Input 2 :
+3
+1 6 2
+10 2 3
+2 10 6
+Sample Output 2 :
+1
+2
+2
+
+------code---------
+
+#include <bits/stdc++.h> 
+int makeItEqual(int a, int b, int c) {
+    // Write your code here.
+    string a1 = bitset<64>(a).to_string();
+    string b1 = bitset<64>(b).to_string();
+    string c1 = bitset<64>(c).to_string();
+    int count = 0;
+    for(int i = 63; i >= 0; i--) {
+        if(c1[i] == '0') {
+            if(a1[i] == '1' && b1[i] == '1') {
+                count++;
+            }
+        }   
+        else {
+            if(a1[i] == '0' && b1[i] == '0') {
+                count += 2;
+            }
+            else if((a1[i] == '1' && b1[i] == '0') || (a1[i] == '0' && b1[i] == '1')) {
+                count++;
+            }
+        }
+    }
+    return count;
+}

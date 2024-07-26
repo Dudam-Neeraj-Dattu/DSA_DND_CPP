@@ -1,0 +1,34 @@
+There is a pond with fish in it divided into ‘N’ segments. Each segment can contain at most 1 fish. You plan to go fishing, and want to catch ‘K’ fish in one attempt. To catch fish, you can drop a net of any size (not exceeding the size of the pond) on a continuous segment of a pond and catch all the fish present in that segment.
+
+You want to save the planet (Ironic, right?), and hence want to minimize the size of the net you use, so as to disturb as little of the ecosystem as possible.
+
+For example:
+
+If the pond has 5 segments as [1, 0, 1, 0, 1], with 1 representing a fish and 0 representing no fish, and if we need to catch 2 fish, we can either pick the range [1,3] or [3,5].
+Note: It is NOT guaranteed that the pond contains at least K fish.
+
+Sample Input 1:
+2
+8 3
+1 0 1 1 0 0 1 1
+5 2
+1 0 0 0 0
+Sample Output 1
+4
+-1
+Explanation for Sample Input 1:
+For test case 1:
+Some of the ways to catch 3 fish are, [1,4], [3,7] and [4,8]. The net of size from index 1 to 4 is the smallest available, hence the answer is 4.
+
+For test case 2:
+The pond has only 1 fish, so it is impossible to catch 2 fish. Hence the answer is -1.
+Sample Input 2:
+2
+5 3
+1 1 1 0 0
+4 2
+1 0 0 1
+Sample Output 2:
+3
+4
+
