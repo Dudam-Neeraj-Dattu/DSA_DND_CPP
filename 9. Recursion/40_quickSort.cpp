@@ -19,8 +19,13 @@ int partition(int a[], int start, int end) {
             i++;
         }
         else {
-            swap(a[i], a[j]); 
-            j--;           
+            // swap(a[i], a[j]); 
+            if(a[j] < a[pivot]) {
+                swap(a[i], a[j--]);
+            }
+            else {
+                j--;
+            }                       
         }
     }
 
