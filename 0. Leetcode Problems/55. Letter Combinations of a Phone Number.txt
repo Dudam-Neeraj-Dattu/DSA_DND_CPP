@@ -1,0 +1,32 @@
+https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
+
+class Solution {
+public:
+
+    void solve(vector<string> &v, string s, int subIndex, int mainIndex, vector<string> &ans) {
+        if(mainIndex == v.size()) {
+            ans.push_back(s);
+            return;
+        }
+        for(int i = 0; i < v[mainIndex].length(); i++) {            
+            s[mainIndex] = v[mainIndex][i];
+            solve(v, s, i, mainIndex + 1, ans);
+        }        
+        // return;
+    }
+
+    vector<string> letterCombinations(string digits) {        
+        unordered_map<int, string> u = {{2, "abc"}, {3, "def"}, {4, "ghi"}, {5, "jkl"}, {6,   "mno"}, {7, "pqrs"}, {8, "tuv"}, {9, "wxyz"}};
+        vector<string> v, ans;
+        if(!digits.length()) {return ans;}
+        string s = "";
+        for(char c : digits) {
+            v.push_back(u[c - '0']);
+        } 
+        for(int i = 0; i < v.size(); i++) {
+            s += '0';
+        }
+        solve(v, s, 0, 0, ans);
+        return ans;
+    }
+};

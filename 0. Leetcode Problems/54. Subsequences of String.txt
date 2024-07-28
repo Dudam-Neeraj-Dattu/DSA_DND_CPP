@@ -1,0 +1,27 @@
+https://www.naukri.com/code360/problems/subsequences-of-string_985087
+
+#include <bits/stdc++.h> 
+
+void solve(string str, vector<string>& ans, int index, string s) {
+	if(index >= str.length()) {
+		if(s.length() > 0)
+			ans.push_back(s);		
+		return;
+	}
+
+	solve(str, ans, index + 1, s);
+
+	s += str[index];
+
+	solve(str, ans, index + 1, s);
+}
+
+vector<string> subsequences(string str){
+	
+	// Write your code here
+	vector<string> ans;	
+	string s = "";	
+	int index = 0;
+	solve(str, ans, index, s);	
+	return ans;
+}
