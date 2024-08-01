@@ -1,0 +1,18 @@
+https://www.naukri.com/code360/problems/allocate-books_1090540
+
+#include <bits/stdc++.h> 
+string encodeString(string &s, int n) 
+{
+    // Write your code here.
+    string ss = "";
+    for(char c : s) {
+        if(c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+            ss += ++c;
+        }
+        else {            
+            ss += --c;
+        }
+    }
+    return ss;
+}
+

@@ -5,11 +5,13 @@ using namespace std;
 class Node {
     public:
         int data;
+        Node* prev;
         Node* next;
     
     public:        
         Node(int data) {
             this -> data = data;
+            this -> prev = NULL;
             this -> next = NULL;
         }
 };
@@ -17,6 +19,7 @@ class Node {
 void insertAtHead(Node* &head, int data) {
     Node* temp = new Node(data);
     temp -> next = head;
+    head -> prev = temp;
     head = temp;
 }
 
@@ -27,23 +30,29 @@ void insertAtTail(Node* &head, int data) {
         tail = tail -> next;
     }
     tail -> next = temp;
+    temp -> prev = tail;
 }
 
 void insertAtPosition(Node* &head, int position, int data) {
     Node* temp = new Node(data);
     Node* p = head;
     int index = 1;
-    while(p && index < position - 1) {
-        p = p -> next;
-        index++;
-    }
     if(position == 1) {
         temp -> next = head;
+        head -> prev = temp;
         head = temp;
         return;
     }
+    while(index < position - 1) {
+        p = p -> next;
+        index++;
+    }
     temp -> next = p -> next;
+    if(temp -> next) {
+        temp -> next -> prev = temp;
+    }    
     p -> next = temp;
+    temp -> prev = p;
 }
 
 void deletePosition(Node* &head, int posititon) {
@@ -52,6 +61,7 @@ void deletePosition(Node* &head, int posititon) {
     if(posititon == 1) {
         head = p -> next;
         p -> next = NULL;
+        head -> prev = NULL;
         return;
     }
     while(index < posititon) {
@@ -60,7 +70,10 @@ void deletePosition(Node* &head, int posititon) {
         index++;
     }
     q -> next = p -> next;
-    p -> next = NULL;
+    if(q -> next) {
+        q -> next -> prev = q;
+    }       
+    p -> prev = p -> next = NULL;
     delete p;
 
 }
