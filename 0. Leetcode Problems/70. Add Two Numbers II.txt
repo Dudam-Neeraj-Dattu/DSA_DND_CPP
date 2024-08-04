@@ -1,0 +1,93 @@
+https://leetcode.com/problems/add-two-numbers-ii/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+
+private:
+    ListNode* reverse(ListNode *head) {
+        if(head -> next == NULL) {
+            return head;
+        }
+        ListNode *prev = NULL, *curr = head, *next = head -> next;
+        while(curr) {
+            curr -> next = prev;
+            prev = curr;
+            curr = next;
+            if(next){next = next -> next;}
+        }
+        return prev;
+    }
+    
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode *p = reverse(l1), *q = reverse(l2);
+        int carry = 0;
+        ListNode *t = new ListNode(-1);
+        ListNode *sHead = t;
+        while(p && q) {
+            int sum = p -> val + q -> val + carry;
+            if(sum >= 10) {                
+                ListNode *temp = new ListNode(sum % 10);
+                t -> next = temp;
+                t = temp;  
+                carry = 1;              
+            }
+            else {
+                ListNode *temp = new ListNode(sum);
+                t -> next = temp;
+                t = temp;                
+                carry = 0;
+            }
+            p = p -> next;
+            q = q -> next;
+        }
+        while(p) {
+            int sum = p -> val + carry;
+            if(sum >= 10) {                
+                ListNode *temp = new ListNode(sum % 10);
+                t -> next = temp;
+                t = temp;  
+                carry = 1;              
+            }
+            else {
+                ListNode *temp = new ListNode(sum);
+                t -> next = temp;
+                t = temp;                
+                carry = 0;
+            }
+            p = p -> next;
+        }
+        while(q) {
+            int sum = q -> val + carry;
+            if(sum >= 10) {                
+                ListNode *temp = new ListNode(sum % 10);
+                t -> next = temp;
+                t = temp;  
+                carry = 1;              
+            }
+            else {
+                ListNode *temp = new ListNode(sum);
+                t -> next = temp;
+                t = temp;                
+                carry = 0;
+            }
+            q = q -> next;
+        }
+        if(carry) {
+            ListNode *temp = new ListNode(1);
+            t -> next = temp;
+            t = temp; 
+        }
+        sHead = sHead -> next;
+        return reverse(sHead);
+    }
+};
