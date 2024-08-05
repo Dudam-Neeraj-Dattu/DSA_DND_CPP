@@ -1,0 +1,139 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nulllefttr) {}
+ *     ListNode(int x) : val(x), next(nulllefttr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+
+// leftrivate:
+
+//     void merge(vector<int> &v, int start, int end) {
+//         int mid = (start + end) / 2;
+//         int i = start, j = mid + 1;
+//         vector<int> vv(end - start + 1, 0);
+//         int k = 0;
+//         while(i <= mid && j <= end) {
+//             if(v[i] <= v[j]) {
+//                 vv[k++] = v[i++];
+//             }
+//             else {
+//                 vv[k++] = v[j++];
+//             }
+//         }
+
+//         while(i <= mid) {
+//             vv[k++] = v[i++];
+//         }
+
+//         while(j <= end) {
+//             vv[k++] = v[j++];
+//         }
+//         k = 0;
+//         i = start;
+//         while(i <= end) {
+//             v[i++] = vv[k++];
+//         }
+//     }
+
+//     void solve(vector<int> &v, int start, int end) {
+
+//         if(start == end) {
+//             return;
+//         }
+
+//         int mid = (start + end) / 2;
+
+//         solve(v, start, mid);
+//         solve(v, mid + 1, end);
+
+//         merge(v, start, end);
+//     }
+
+private:
+
+    ListNode* findMid(ListNode* head) {
+        ListNode *left = head, *right = head -> next;
+        while(right && right -> next) {
+            left = left -> next;
+            right = right -> next -> next;            
+        }
+        return left;
+    }
+
+    ListNode* merge(ListNode *left, ListNode *right) {
+        if(left == NULL) {
+            return right;
+        }
+        if(right == NULL) {
+            return left;
+        }
+        ListNode *ans = new ListNode(-1);
+        ListNode *t = ans;        
+
+        while(left && right) {
+            if(left -> val < right -> val) {
+                t -> next = left;
+                t = left;
+                left = left -> next;
+            }
+            else {
+                t -> next = right;
+                t = right;
+                right = right -> next;
+            }
+        }
+        while(left) {
+            t -> next = left;
+            t = left;
+            left = left -> next;
+        }
+
+        while(right) {
+            t -> next = right;
+            t = right;
+            right = right -> next;
+        }
+        ans = ans -> next;
+        return ans;
+    }
+
+public:
+    ListNode* sortList(ListNode* head) {
+        if(head == NULL || head -> next == NULL) {
+            return head;
+        }
+
+        ListNode *mid = findMid(head);
+        ListNode *right = mid -> next;
+        ListNode *left = head;
+        mid -> next = NULL;
+
+        left = sortList(left);
+        right = sortList(right);
+        
+        ListNode *ans = merge(left, right);
+
+        return ans;
+
+
+        // ListNode *left = head;        
+        // vector<int> v;
+        // while(left) {
+        //     v.leftush_back(left -> val);
+        //     left = left -> next;
+        // }
+        // solve(v, 0, v.size() - 1);
+        // int i = 0;
+        // left = head;
+        // while(left) {
+        //     left -> val = v[i++];
+        //     left = left -> next;
+        // }
+        // return head;
+    }
+};
