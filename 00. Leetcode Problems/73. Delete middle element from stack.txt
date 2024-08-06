@@ -1,0 +1,21 @@
+https://www.naukri.com/code360/problems/delete-middle-element-from-stack_985246
+
+#include <bits/stdc++.h> 
+void deleteMiddle(stack<int>&inputStack, int N){
+	
+   // Write your code here
+   stack<int> s; 
+
+   int n =  floor((N)/(double)2);
+
+   while(n--) {
+      s.push(inputStack.top());
+      inputStack.pop();
+   }
+   inputStack.pop();
+   while(!s.empty()) {
+      inputStack.push(s.top());
+      s.pop();
+   }
+
+}

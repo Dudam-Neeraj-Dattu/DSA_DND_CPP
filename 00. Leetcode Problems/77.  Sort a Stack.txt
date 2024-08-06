@@ -1,0 +1,36 @@
+https://www.naukri.com/code360/problems/sort-a-stack_985275
+
+#include <bits/stdc++.h> 
+
+void insertAtitsPosition(stack<int> &stack, int x) {
+
+	if(stack.empty() || stack.top() < x) {
+		stack.push(x);
+		return;
+	}
+
+	int y = stack.top();
+
+	stack.pop();
+
+	insertAtitsPosition(stack, x);
+
+	stack.push(y);
+
+}
+
+void sortStack(stack<int> &stack)
+{
+	// Write your code here
+	if(stack.empty()) {
+		return;
+	}
+
+	int x = stack.top();
+
+	stack.pop();
+
+	sortStack(stack);
+
+	insertAtitsPosition(stack, x);
+}

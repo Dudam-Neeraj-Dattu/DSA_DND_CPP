@@ -1,0 +1,29 @@
+https://www.naukri.com/code360/problems/redundant-brackets_975473
+
+#include <bits/stdc++.h> 
+bool findRedundantBrackets(string &s)
+{
+    // Write your code here.
+    int ops = 0;
+    stack<char> p;
+    for(char c : s) {
+        if(c == '(') {
+            p.push(c);
+        }
+        else if((c == '*' || c == '+' || c == '/' || c == '-') && (!p.empty())) {
+            p.push(c);
+        }
+        else if(c == ')') {
+            if(p.top() == '(') {
+                return true;
+            } 
+            else {
+                while(p.top() != '(') {
+                    p.pop();
+                }
+                p.pop();
+            }
+        }        
+    }
+    return !p.empty();
+}
