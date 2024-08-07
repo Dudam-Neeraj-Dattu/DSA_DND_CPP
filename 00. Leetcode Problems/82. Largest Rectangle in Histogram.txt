@@ -1,0 +1,103 @@
+https://leetcode.com/problems/largest-rectangle-in-histogram/
+
+class Solution {
+public:
+    int largestRectangleArea(vector<int>& heights) {
+        int size = heights.size();
+        if(size == 1) {
+            return heights[0];
+        }
+        vector<int> prevSmaller(size, 0);
+        vector<int> nextSmaller(size, 0);
+        stack<int> s;
+        s.push(-1);
+
+        for(int i = size - 1; i >= 0; i--) {
+            if(s.top() == -1) {
+                nextSmaller[i] = s.top();
+                s.push(i);
+            }
+            else if(heights[s.top()] >= heights[i]) {
+                while(s.top() != -1 && heights[s.top()] >= heights[i]) {
+                    s.pop();
+                }
+                nextSmaller[i] = s.top();
+                s.push(i);
+            }
+            else if(heights[s.top()] <= heights[i]) {
+                nextSmaller[i] = s.top();
+                s.push(i);
+            }
+        }
+      
+        while(!s.empty()) {
+            s.pop();
+        }
+
+        s.push(-1);
+
+        for(int i = 0; i < size; i++) {
+            if(s.top() == -1) {
+                prevSmaller[i] = s.top();
+                s.push(i);
+            }
+            else if(heights[s.top()] >= heights[i]) {
+                while(s.top() != -1 && heights[s.top()] >= heights[i]) {
+                    s.pop();
+                }
+                prevSmaller[i] = s.top();
+                s.push(i);
+            }
+            else if(heights[s.top()] <= heights[i]) {
+                prevSmaller[i] = s.top();
+                s.push(i);
+            }
+        }
+
+        for(int i : prevSmaller) {
+            cout << i << " ";
+        }cout << endl;
+        
+          for(int i : nextSmaller) {
+            cout << i << " ";
+        }cout << endl;
+
+        int maxArea = INT_MIN;
+
+        for(int i = 0; i < size; i++) {
+            if(nextSmaller[i] == -1) {
+                nextSmaller[i] = size;
+            }
+            int area = (nextSmaller[i] - prevSmaller[i] - 1) * heights[i];
+
+            maxArea = max(maxArea, area);
+        }
+        
+        return maxArea;
+
+        // int maxSoFar = 0;
+
+        // for(int i = 0; i < heights.size(); i++) { 
+        //     int leftMost = i;   
+        //     int rightMost = i;       
+        //     while(leftMost >= 0) {
+        //         if(heights[leftMost] < heights[i]) {
+        //             break;
+        //         }
+        //         leftMost--;
+        //     }
+        //     // if(leftMost == -1) {leftMost = 0;}            
+        //     while(rightMost < heights.size()) {
+        //         if(heights[rightMost] < heights[i]) {
+        //             break;
+        //         }
+        //         rightMost++;
+        //     }
+        //     // if(rightMost == heights.size()) {rightMost = heights.size() - 1;} 
+        //     int currMaxArea = (rightMost - leftMost - 1) * heights[i];
+        //     cout << heights[i] << " " << rightMost << " " << leftMost << " " << currMaxArea << endl;
+        //     maxSoFar = max(maxSoFar, currMaxArea);
+        // }
+        // return maxSoFar;
+    }
+};

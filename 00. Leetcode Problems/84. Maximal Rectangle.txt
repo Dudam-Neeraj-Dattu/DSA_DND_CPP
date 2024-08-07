@@ -1,0 +1,85 @@
+https://leetcode.com/problems/maximal-rectangle/description/
+
+class Solution {
+public:
+    int maxAreaTillNow(vector<int> &v) {
+        vector<int> nextSmaller(v.size(), 0);
+        vector<int> prevSmaller(v.size(), 0);
+
+        stack<int> s;
+        s.push(-1);
+
+        for(int i = v.size() - 1; i >= 0; i--) {
+            if(s.top() == -1) {
+                nextSmaller[i] = s.top();
+                s.push(i);
+            }
+
+            else if(v[s.top()] >= v[i]) {
+                while(s.top() != -1 && v[s.top()] >= v[i]) {
+                    s.pop();
+                }
+                nextSmaller[i] = s.top();
+                s.push(i);
+            }
+
+            else if(v[s.top()] < v[i]) {
+                nextSmaller[i] = s.top();
+                s.push(i);
+            }
+        }
+
+        while(!s.empty()) {
+            s.pop();
+        }
+
+        s.push(-1);
+
+        for(int i = 0; i < v.size(); i++) {
+            if(s.top() == -1) {
+                prevSmaller[i] = s.top();
+                s.push(i);
+            }
+
+            else if(v[s.top()] >= v[i]) {
+                while(s.top() != -1 && v[s.top()] >= v[i]) {
+                    s.pop();
+                }
+                prevSmaller[i] = s.top();
+                s.push(i);
+            }
+
+            else if(v[s.top()] < v[i]) {
+                prevSmaller[i] = s.top();
+                s.push(i);
+            }
+        }
+
+        int maxArea = 0;
+
+        for(int i = 0; i < v.size(); i++) {
+            if(nextSmaller[i] == -1) {
+                nextSmaller[i] = v.size();    
+            }
+            int area = (nextSmaller[i] - prevSmaller[i] - 1) * v[i];
+            maxArea = max(maxArea, area);
+        }
+        cout << maxArea << " ";
+        return maxArea;
+    }
+
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        vector<int> v(matrix[0].size(), 0);
+        int maxArea = 0;
+        for(int i = 0; i < matrix.size(); i++) {
+            for(int j = 0; j < matrix[0].size(); j++) {
+                if(matrix[i][j] == '0') {v[j] = 0;}
+                else {v[j] += matrix[i][j] - '0';}                
+            }
+            
+            maxArea = max(maxArea, (maxAreaTillNow(v)));
+        }
+
+        return maxArea;
+    }
+};
