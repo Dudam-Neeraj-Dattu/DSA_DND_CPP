@@ -13,7 +13,7 @@ int main() {
     q.push(2);
 
     q.push(4);
-
+    cout << q.size();
     cout << q.front() << endl;
 
     cout << q.size() << endl;

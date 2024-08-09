@@ -1,0 +1,47 @@
+https://www.geeksforgeeks.org/problems/first-non-repeating-character-in-a-stream1216/1
+
+class Solution {
+    
+	public:
+		string FirstNonRepeating(string A){
+		    // Code here
+		    string s = "";
+		    bool a[26] = {false};
+		    queue<char> q;
+		    q.push(A[0]);
+		    a[A[0] - 'a'] = true;
+		    s += q.front();
+		    for(int i = 1; i < A.length(); i++) {
+		        if(a[A[i] - 'a']) {
+		            if(q.empty()) {
+		                s += '#';
+		            }
+		            else {
+		                vector<char> v;
+	                    while(!q.empty()) {
+	                        if(q.front() != A[i]) {
+	                            v.push_back(q.front());
+	                            q.pop();
+	                        }
+	                        else {
+	                            q.pop();
+	                        }
+	                    }
+	        
+	                    for(char c : v) {
+	                        q.push(c);
+	                    }
+	                    if(q.empty()) { s += '#';}
+		                else {s += q.front();}
+		            }
+		        }
+		        else {
+		            q.push(A[i]);
+		            a[A[i] - 'a'] = true;
+		            s += q.front();
+		        }
+		    }
+		    return s;
+		}
+
+};
