@@ -15,6 +15,7 @@ int main() {
         }
         swap(a[i], a[minIndex]);        
     }
+
     for(int i : a) {
         cout << i << " ";
     }
