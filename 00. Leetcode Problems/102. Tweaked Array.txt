@@ -1,0 +1,35 @@
+Problem statement
+You are given an array ‘ARR’ of size ‘N’ consisting of integers. The array needs to be tweaked a little bit.
+
+Firstly, calculate ‘TotalSum’ = ‘ARR[0]’ + ‘ARR[1]’ + ... + ‘ARR[N - 1]’.
+
+Now, for every ‘i’ (0 <= ‘i’ <= ‘N’ - 1), ‘ARR[i]’ is replaced with ‘ARR[i]’ = ‘TotalSum’ - ‘ARR[i]’.
+
+Output the final array after tweaking it.
+
+Example :
+'N' = 3
+'ARR' = {2, 4, 1, 1}
+
+TotalSum = 2 + 4 + 1 + 1 = 8
+
+Tweaked Array = {6, 4, 7, 7}.
+
+-----------code---------------
+
+#include <bits/stdc++.h> 
+vector<int> tweakTheArray(vector<int> arr, int n){
+    // Write your code here.
+    int sum = 0;
+
+    for(int i : arr) {
+        sum += i;
+    }
+
+    for(int i = 0; i < n; i++) {
+        arr[i] = sum - arr[i];
+    }
+
+    return arr;
+    
+}

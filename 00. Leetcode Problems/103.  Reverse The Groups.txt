@@ -1,0 +1,65 @@
+Problem statement
+You are given a stack 'S', of size 'N' consisting of integers only. You are also given an integer 'K'. You are supposed to reverse each group of size 'K' in the stack.
+
+Start making the group of size 'K' from the top of the stack and then reverse this group. Repeat this process and if there are fewer than 'K' integers in the last group, leave the group as it is.
+
+Print the stack after reversing each group of size 'K'.
+
+Example :
+'S' = {1, 2, 3, 4, 5, 6}, 'K' = 2.
+
+The leftmost element (i.e. 1) is the bottommost element of the stack, and the rightmost element (i.e. 6) is the topmost element of the stack.
+
+Group 1 : {5, 6}.
+Group 2 : {3, 4}.
+Group 3 : {1, 2}.
+
+After reversing the groups :
+
+Group 1 : {6, 5}.
+Group 2 : {4, 3}.
+Group 3 : {2, 1}.
+
+So, the stack now looks like , 'S' : {2, 1, 4, 3, 6, 5}.
+
+------------code------------
+
+#include <bits/stdc++.h> 
+stack<int> reverseTheGroups(stack<int> &s, int n, int k) {
+    // Write your code here.
+    vector<deque<int>> v;
+    deque<int> d;
+    int count = 0;
+    while(!s.empty()) {                
+        d.push_back(s.top());
+        count++;
+        s.pop();
+        if(count == k) {
+            v.push_back(d);
+            d.clear();
+            count = 0;
+        }
+    }
+    if(!d.empty()) {v.push_back(d);}        
+    if(n % k == 0) {
+        for(int i = v.size() - 1; i >= 0; i--) {
+            while(!v[i].empty()) {
+                s.push(v[i].front());
+                v[i].pop_front();
+            }            
+        }
+    }
+    else {
+        while(!v[v.size() - 1].empty()) {
+            s.push(v[v.size() - 1].back());
+            v[v.size() - 1].pop_back();
+        }
+        for(int i = v.size() - 2; i >= 0; i--) {
+            while(!v[i].empty()) {
+                s.push(v[i].front());
+                v[i].pop_front();
+            }
+        }
+    }
+    return s;
+}
