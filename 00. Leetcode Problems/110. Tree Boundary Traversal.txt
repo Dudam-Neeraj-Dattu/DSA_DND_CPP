@@ -1,0 +1,83 @@
+https://www.geeksforgeeks.org/problems/boundary-traversal-of-binary-tree/1
+
+class Solution {
+public:
+
+    void solveleft(Node *root, vector<int> &v, bool &end) {
+        if(root && !end) {
+            v.push_back(root -> data);   
+        }
+        if(root == NULL) {
+            return;
+        }
+        if(root -> left == NULL && root -> right == NULL) {
+            // cout << root -> data << endl;
+            end = true;
+            return;
+        }
+        solveleft(root -> left, v, end);
+        solveleft(root -> right, v, end);
+    }
+    
+    void solveright(Node *root, vector<int> &v, bool &end) {
+        if(root && !end) {
+            v.push_back(root -> data);   
+        }
+        if(root == NULL) {
+            return;
+        }
+        if(root -> left == NULL && root -> right == NULL) {
+            end = true;
+            return;
+        }
+        solveright(root -> right, v, end);
+        solveright(root -> left, v, end);
+    }
+    
+    void solveleaf(Node *root, vector<int> &v) {
+        if(root == NULL) {
+            return;
+        }
+        if(root -> left == NULL && root -> right == NULL) {
+            v.push_back(root -> data);
+            return;
+        }
+        solveleaf(root -> left, v);
+        solveleaf(root -> right, v);
+    }
+    
+    
+    vector <int> boundary(Node *root)
+    {
+        //Your code here
+        vector<int> v;
+        if(root == NULL) {
+            return v;
+        }
+        bool end = false;
+        v.push_back(root -> data);
+        vector<int> vleft, vright, vleaf;
+        solveleft(root->left, vleft, end);
+        for(int i : vleft) {
+            v.push_back(i);
+        }
+        end = false;
+        solveleaf(root, vleaf);
+        int length = 0;
+        if(root -> right == NULL || root -> left == NULL) {
+            length = vleaf.size();
+        }
+        else {
+            length = vleaf.size() - 1;
+        }
+        for(int i = 1; i < length; i++) {
+            v.push_back(vleaf[i]);
+        }
+        solveright(root->right, vright, end);
+        reverse(vright.begin(), vright.end());
+        for(int i : vright) {
+            v.push_back(i);
+        }
+        return v;
+    }
+};
