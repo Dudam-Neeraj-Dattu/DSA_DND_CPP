@@ -1,0 +1,37 @@
+https://www.geeksforgeeks.org/problems/left-view-of-binary-tree/1
+
+
+vector<int> leftView(Node *root)
+{
+   // Your code here
+   vector<int> ans;
+   
+   map<int, int> m;
+   
+   if(root == NULL) {
+       return ans;
+   }
+   
+   queue<pair<Node *, int>> q;
+   q.push(make_pair(root, 0));
+   
+   while(!q.empty()) {
+       if(!m[q.front().second]) {
+           m[q.front().second] = q.front().first -> data;
+       }
+       if(q.front().first -> left) {
+           q.push(make_pair(q.front().first -> left, q.front().second + 1));
+       }
+       if(q.front().first -> right) {
+           q.push(make_pair(q.front().first -> right, q.front().second + 1));
+       }
+       q.pop();
+   }
+   
+   for(auto i : m) {
+       ans.push_back(i.second);
+   }
+   
+   return ans;
+   
+}

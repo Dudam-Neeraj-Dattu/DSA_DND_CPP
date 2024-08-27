@@ -1,0 +1,84 @@
+https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/description/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+
+    void traverse(TreeNode *root, vector<pair<int, pair<int, int>>> &v, int row, int col) {
+        if(root == NULL) {
+            return;
+        }
+
+        pair<int, pair<int, int>> p;
+        pair<int, int> index = make_pair(row, col);
+        p = make_pair(root -> val, index);
+        v.push_back(p);
+
+        traverse(root -> left, v, row + 1, col - 1);
+        traverse(root -> right, v, row + 1, col + 1);
+    }
+
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        vector<pair<int, pair<int, int>>> v;
+        vector<vector<vector<int>>> ans;
+        vector<vector<int>> final_answer;
+        if(root == NULL) {
+            return final_answer;
+        }
+
+        traverse(root, v, 0, 0);
+        int mini = INT_MAX, maxi = INT_MIN, height_max = INT_MIN;
+        for(int i = 0; i < v.size(); i++) {
+            cout << v[i].first << " <" << v[i].second.first << "," << v[i].second.second << ">"<< endl;
+            mini = min(mini, v[i].second.second);
+            maxi = max(maxi, v[i].second.second);
+            height_max = max(height_max, v[i].second.first);
+        }
+
+        int ans_size = maxi - mini + 1;
+        vector<vector<int>> temp;
+        for(int i = 0; i <= height_max; i++) {
+            vector<int> vv;
+            temp.push_back(vv);
+        }        
+        for(int i = 0; i < ans_size; i++) {
+            ans.push_back(temp);
+            vector<int> vv;
+            final_answer.push_back(vv);
+        }
+        unordered_map<int, int> u;
+        int vector_index = 0;
+
+        for(int i = mini; i <= maxi; i++) {
+            u[i] = vector_index++;
+        }
+        for(int i = 0; i < v.size(); i++) {
+            int index = u[v[i].second.second];
+            ans[index][v[i].second.first].push_back(v[i].first);
+        }        
+
+        for(int i = 0; i < ans_size; i++) {
+            for(int j = 0; j <= height_max; j++) {
+                if(ans[i][j].size()) {
+                    sort(ans[i][j].begin(), ans[i][j].end());  
+                    for(int k = 0; k < ans[i][j].size(); k++) {
+                        final_answer[i].push_back(ans[i][j][k]);
+                    }                  
+                }
+
+            }
+        }
+
+        return final_answer;
+    }
+};
