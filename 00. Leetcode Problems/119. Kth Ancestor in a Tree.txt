@@ -1,0 +1,37 @@
+https://www.geeksforgeeks.org/problems/kth-ancestor-in-a-tree/1
+
+void solve(Node *root, int k, int node, vector<int> v, int &kth_ancestor) {
+    if(root == NULL) {
+        return;
+    }
+    
+    v.push_back(root -> data);
+    
+    if(root -> data == node) {
+        v.pop_back();
+        int index = v.size() - k;
+        if (index >= 0) {
+            kth_ancestor = v[index];
+        }
+        return;
+    }
+ 
+    solve(root -> left, k, node, v, kth_ancestor);
+    solve(root -> right, k, node, v, kth_ancestor);
+    
+    // v.pop_back();
+}
+
+int kthAncestor(Node *root, int k, int node)
+{
+    // Code here
+    if(root == NULL) {
+        return -1;
+    }
+    
+    vector<int> v;
+    int kth_ancestor = -1;
+    solve(root, k, node, v, kth_ancestor);
+    
+    return kth_ancestor;
+}
