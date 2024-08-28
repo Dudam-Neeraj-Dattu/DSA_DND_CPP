@@ -19,8 +19,7 @@ class Solution{
         
         res.second = max(left.first, left.second) + max(right.first, right.second);
         
-        return res;
-        
+        return res; 
     }
     int getMaxSum(Node *root) 
     {
