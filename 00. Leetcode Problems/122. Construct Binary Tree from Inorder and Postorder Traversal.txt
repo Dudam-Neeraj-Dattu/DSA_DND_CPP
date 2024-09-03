@@ -1,0 +1,76 @@
+https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/description/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+
+    void solve(TreeNode* root, vector<int>& preorder, int& preorder_index,
+               vector<int> inorder, int inorder_index) {
+        if (preorder_index == preorder.size()) {
+            return;
+        }
+        vector<int> left, right;
+        bool left_found = false, right_found = false;
+        int index;
+
+
+        for (int i = inorder_index + 1; i < inorder.size(); i++) {
+            right.push_back(inorder[i]);
+            if (inorder[i] == preorder[preorder_index]) {
+                right_found = true;
+                index = i - inorder_index - 1;
+            }
+        }
+
+        if (right_found) {
+            TreeNode* temp = new TreeNode(preorder[preorder_index]);
+            root->right = temp;
+            preorder_index--;
+            solve(temp, preorder, preorder_index, right, index);
+        }
+
+        for (int i = 0; i < inorder_index; i++) {
+            left.push_back(inorder[i]);
+            if (inorder[i] == preorder[preorder_index]) {
+                left_found = true;
+                index = i;
+            }
+        }
+
+        if (left_found) {
+            TreeNode* temp = new TreeNode(preorder[preorder_index]);
+            root->left = temp;
+            preorder_index--;
+            solve(temp, preorder, preorder_index, left, index);
+        }
+        
+        if (!left_found && !right_found) {
+            return;
+        }
+    }
+
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        TreeNode* root = new TreeNode(postorder[postorder.size() - 1]);
+        int inorder_index, preorder_index = postorder.size() - 2;
+        for (int i = 0; i < inorder.size(); i++) {
+            if (inorder[i] == postorder[postorder.size() - 1]) {
+                inorder_index = i;
+                break;
+            }
+        }
+
+        solve(root, postorder, preorder_index, inorder, inorder_index);
+
+        return root;
+    }
+};
