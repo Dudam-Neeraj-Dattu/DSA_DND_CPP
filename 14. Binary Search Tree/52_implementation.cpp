@@ -81,11 +81,11 @@ void inorder(Node *root) {
 
 int main() {
 
-    int list[8] = {10, 7, 15, 5, 9, 17, 16, 19};
+    int list[9] = {10, 7, 15, 5, 9, 17, 16, 19, 14};
 
     Node *root = new Node(list[0]);
 
-    for (int i = 1; i < 8; i++) {
+    for (int i = 1; i < 9; i++) {
         buildBST(root, list[i]);
     }
 
