@@ -1,0 +1,44 @@
+https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+class Solution {
+public:
+    void pathfinder(TreeNode *root, int data, queue<TreeNode *> &q) {
+        if(root == NULL || root -> val == data) {
+            q.push(root);
+            return;
+        }
+
+        if(root -> val < data) {
+            q.push(root);
+            pathfinder(root -> right, data, q);
+        }
+        
+        else if(root -> val > data) {
+            q.push(root);
+            pathfinder(root -> left, data, q);
+        }
+    }
+
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        queue<TreeNode *> p_queue, q_queue;
+        pathfinder(root, p -> val, p_queue);
+        pathfinder(root, q -> val, q_queue);
+        TreeNode *ans;
+        while((!p_queue.empty() && !q_queue.empty()) && (p_queue.front() == q_queue.front())) {
+            ans = p_queue.front();
+            p_queue.pop();
+            q_queue.pop();
+        }
+        return ans;
+    }
+};
