@@ -1,0 +1,27 @@
+https://www.naukri.com/code360/problems/flatten-bst-to-a-sorted-list_1169459
+
+
+void traverse(TreeNode<int> *root, vector<int> &v) {
+    if(root == NULL) {
+        return;
+    }
+
+    traverse(root -> left, v);
+    v.push_back(root -> data);
+    traverse(root -> right, v);
+}
+
+TreeNode<int>* flatten(TreeNode<int>* root)
+{
+    // Write your code here
+    vector<int> v;
+    traverse(root, v);
+    root = new TreeNode<int> (v[0]);
+    TreeNode<int> *ans = root;
+    for(int i = 1; i < v.size(); i++) {
+        TreeNode<int> *temp = new TreeNode<int> (v[i]);
+        root -> left = temp;
+        root = temp;
+    }
+    return ans;
+}
