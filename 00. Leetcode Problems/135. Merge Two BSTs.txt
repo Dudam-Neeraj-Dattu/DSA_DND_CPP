@@ -1,0 +1,42 @@
+https://www.naukri.com/code360/problems/h_920474
+
+
+void traverse(TreeNode *root, vector<int> &v) {
+  if (root == NULL) {
+    return;
+  }
+
+  traverse(root->left, v);
+  v.push_back(root->data);
+  traverse(root->right, v);
+}
+
+TreeNode *buildTree(TreeNode *root, vector<int> &v, int start, int end) {
+  if (start > end) {
+    return NULL;
+  }
+
+  int mid = (start + end) / 2;
+
+  TreeNode *temp = new TreeNode(v[mid]);
+
+  root = temp;
+
+  root->left = buildTree(root->left, v, start, mid - 1);
+
+  root->right = buildTree(root->right, v, mid + 1, end);
+
+  return root;
+}
+
+vector<int> mergeBST(TreeNode *root1, TreeNode *root2) {
+  // Write your code here.
+  vector<int> v;
+    traverse(root1, v);
+    traverse(root2, v);
+    sort(v.begin(), v.end());
+    TreeNode *ans = buildTree(ans, v, 0, v.size() - 1);
+    v.clear();
+    traverse(ans, v);
+    return v;
+}
