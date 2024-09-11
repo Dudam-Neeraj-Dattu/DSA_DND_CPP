@@ -1,0 +1,77 @@
+https://www.geeksforgeeks.org/problems/largest-bst/1
+
+class Solution{
+    public:
+    /*You are required to complete this method */
+    // Return the size of the largest sub-tree which is also a BST
+    int leftmax(Node *root) {
+        if(root -> right == NULL) {
+            return root -> data;
+        }
+        
+        return leftmax(root -> right);
+    }
+    
+    int rightmin(Node *root) {
+        if(root -> left == NULL) {
+            return root -> data;
+        }
+        
+        return rightmin(root -> left);
+    }
+    
+    pair<bool, int> solve(Node *root, int &maxi) {
+        if(root == NULL) {
+            return make_pair(true, 0);
+        }
+        
+        pair<bool, int> left = solve(root -> left, maxi);
+        pair<bool, int> right = solve(root -> right, maxi);
+        
+        if(left.first) {
+            maxi = max(maxi, left.second);
+        }
+        
+        if(right.first) {
+            maxi = max(maxi, right.second);
+        }
+        
+        pair<bool, int> p = make_pair(false, left.second + right.second + 1);
+        int left_max = 0, right_min = INT_MAX;
+        
+        if(left.first && right.first) {
+            bool left_ok = true, right_ok = true;
+            
+            if(root -> left) {
+                left_max = leftmax(root -> left);
+                if(root -> data <= root -> left -> data) {
+                    left_ok = false;
+                }
+            }
+            
+            if(root -> right) {
+                right_min = rightmin(root -> right);
+                if(root -> data >= root -> right -> data) {
+                    right_ok = false;
+                }
+            }
+            
+            if(left_ok && right_ok) {
+                p.first = (root -> data > left_max && root -> data < right_min);
+                if(p.first) {
+                    maxi = max(maxi, p.second);
+                }
+            }
+        }
+        // cout << p.first << " " << p.second << " " << root -> data << " ->" << left_max << " " << right_min << endl;
+        return p;
+    }
+    
+    int largestBst(Node *root)
+    {
+    	//Your code here
+    	int maxi = INT_MIN;
+    	pair<bool, int> p = solve(root, maxi);
+    	return maxi;
+    }
+}; 

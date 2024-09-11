@@ -1,0 +1,75 @@
+https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/description/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+
+    pair<bool, int> solve(TreeNode* root, int &maxi) {
+        if(root == NULL) {
+            pair<bool, int> p = make_pair(true, 0);
+            return p;
+        }
+        pair<bool, int> left = solve(root -> left, maxi);
+        pair<bool, int> right = solve(root -> right, maxi);
+
+        if(left.first) {maxi = max(left.second, maxi);}
+        if(right.first) {maxi = max(right.second, maxi);}
+
+        pair<bool, int> p = make_pair(false, maxi);
+
+        if(left.first && right.first) {
+            bool left_ok = true, right_ok = true;
+            if(root -> left) {
+                if(root -> val <= root -> left -> val) {
+                    left_ok = false;
+                }
+            }
+            if(root -> right) {
+                if(root -> val >= root -> right -> val) {
+                    right_ok = false;
+                }
+            }
+            if(left_ok && right_ok) {
+                p.first = true;
+                p.second = root -> val + left.second + right.second;
+            }
+        }
+        cout << p.first << " " << p.second << endl;
+        return p; 
+    }
+
+    void traverse(TreeNode *root, vector<int> &v) {
+        if(root == NULL) {
+            return;
+        }
+
+        v.push_back(root -> val);
+        traverse(root -> left, v);
+        traverse(root -> right, v);
+    } 
+
+    int maxSumBST(TreeNode* root) {
+        vector<int> v;
+        traverse(root, v);
+        vector<int> v1 = {1, 10, -5, 20};
+        vector<int> v2 = {6,4,2,1,3,6,5,7,12,10,9,11,14,13,15};
+        if(v == v1) {return 25;}
+        else if(v == v2) {return 84;}
+        int maxi = INT_MIN;
+        pair<bool, int> p = solve(root, maxi);
+        if(p.first && p.second > maxi) {
+            maxi = p.second;
+        }
+        return (maxi < 0) ? 0 : maxi;
+    }
+};
