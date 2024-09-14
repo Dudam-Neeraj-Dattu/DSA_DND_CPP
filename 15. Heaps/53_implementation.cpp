@@ -65,6 +65,29 @@ class heap {
         }
 };
 
+void heapify(vector<int> &v, int size, int i) {
+    int largest = i, left = 2 * i, right = 2 * i + 1;
+    if(left <= size && v[left] > v[largest]) {
+        largest = left;
+    }
+    if(right <= size && v[right] > v[largest]) {
+        largest = right;
+    }
+    if(largest != i) {
+        swap(v[largest], v[i]);
+        heapify(v, size, largest);
+    }
+ 
+}
+
+void heapSort(vector<int> &v, int size) {
+    while(size > 1) {
+        swap(v[1], v[size]);
+        size--;
+        heapify(v, size, 1);
+    }
+}
+
 
 
 int main() {
@@ -79,6 +102,23 @@ int main() {
     h.print();
     h.deleteFromHeap();
     h.print();
+
+    vector<int> v = {-1, 54, 53, 55, 52, 50};
+    // for(int i = v.size() / 2; i > 0; i--) {
+    //     heapify(v, v.size(), i);
+    // }
+
+    // for(int i : v) {
+    //     cout << i << " ";
+    // }
+
+    // cout << endl;
+
+    heapSort(v, v.size() - 1);
+
+    for(int i : v) {
+        cout << i << " ";
+    }
 
     return 0;
 }
