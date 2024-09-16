@@ -1,0 +1,57 @@
+https://www.geeksforgeeks.org/problems/is-binary-tree-heap/1
+
+class Solution {
+  public:
+    
+    bool solve(struct Node* tree) {
+        if(tree == NULL) {
+            return true;
+        }
+        
+        if(tree -> left == NULL && tree -> right == NULL) {
+            return true;
+        }
+        
+        bool left = solve(tree -> left);
+        bool right = solve(tree -> right);
+        
+        if(left && right) {
+            if(tree -> left) {
+                left = (tree -> data > tree -> left -> data);
+            }
+            
+            if(tree -> right) {
+                right = (tree -> data > tree -> right -> data);
+            }
+        }
+        
+        return left && right;
+    }
+    
+    bool isCBT(struct Node* tree) {
+        queue<Node *> q;
+        q.push(tree);
+        while(!q.empty()) {
+            if(q.front()) {
+                q.push(q.front() -> left);
+                q.push(q.front() -> right);
+            }
+            else {
+                break;
+            }
+            q.pop();
+        }
+        while(!q.empty() && !q.front()) {
+            q.pop();
+        }
+        return !q.size();
+    }
+  
+    bool isHeap(struct Node* tree) {
+        // code here
+        bool s = solve(tree);
+        bool c = isCBT(tree);
+        // cout << s << " " << c << endl;
+        return s && c;
+    }
+};
