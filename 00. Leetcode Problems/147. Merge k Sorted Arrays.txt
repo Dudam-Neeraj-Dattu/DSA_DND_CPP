@@ -1,0 +1,54 @@
+https://www.geeksforgeeks.org/problems/merge-k-sorted-arrays/1
+
+class node {
+    public:
+        int data;
+        int i;
+        int j;
+        
+    public:
+        node(int data, int i, int j) {
+            this -> data = data;
+            this -> i = i;
+            this -> j = j;
+        }
+};
+
+class compare {
+    public:
+        bool operator()(node *a, node *b) {
+            return a -> data > b -> data;
+        }
+};
+
+class Solution
+{
+    public:
+    //Function to merge k sorted arrays.
+    vector<int> mergeKArrays(vector<vector<int>> arr, int K)
+    {
+        //code here
+        priority_queue<node *, vector<node*>, compare> minHeap;
+        
+        for(int i = 0; i < K; i++) {
+            node *temp = new node(arr[i][0], i, 0);
+            minHeap.push(temp);
+        }
+        vector<int> v;
+        while(minHeap.size() > 0) {
+            node *tmp = minHeap.top();
+            v.push_back(tmp -> data);
+            
+            int i = tmp -> i;
+            int j = tmp -> j;
+            if(j + 1 < arr[i].size()) {
+                node *next = new node(arr[i][j + 1], i, j + 1);
+                minHeap.push(next);
+            }
+            
+            minHeap.pop();
+        }
+        
+        return v;
+    }
+};

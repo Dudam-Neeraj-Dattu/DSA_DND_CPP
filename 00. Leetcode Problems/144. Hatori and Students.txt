@@ -1,0 +1,17 @@
+https://www.naukri.com/code360/problems/hatori-and-students_4266442
+
+#include <bits/stdc++.h> 
+int chooseMaxStudents(vector<int> &h, int n) {
+    // Write your code here
+    sort(h.begin(), h.end());
+    int maxcount = 0;
+    int start = 0; 
+    
+    for (int end = 0; end < h.size(); end++) {        
+        while (h[end] - h[start] > 5) {
+            start++;  
+        }
+        maxcount = max(maxcount, end - start + 1);
+    }
+    return maxcount;
+} 

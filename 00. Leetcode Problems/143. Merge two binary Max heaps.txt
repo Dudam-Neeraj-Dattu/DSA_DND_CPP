@@ -1,0 +1,36 @@
+https://www.geeksforgeeks.org/problems/merge-two-binary-max-heap0144/
+
+class Solution{
+    public:
+    
+    void heapify(vector<int> &v, int i) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        if((left < v.size()) && (v[largest] < v[left])) {
+            largest = left;
+        }
+        if((right < v.size()) && (v[largest] < v[right])) {
+            largest = right;
+        }
+        if(largest != i) {
+            swap(v[largest], v[i]);
+            heapify(v, largest);
+        }
+    } 
+    
+    vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
+        // your code here
+        vector<int> v;
+        for(int i : a) {
+            v.push_back(i);
+        }
+        for(int i : b) {
+            v.push_back(i);
+        }
+        for(int i = v.size() / 2; i >= 0; i--) {
+            heapify(v, i);
+        }
+        return v;
+    }
+};
