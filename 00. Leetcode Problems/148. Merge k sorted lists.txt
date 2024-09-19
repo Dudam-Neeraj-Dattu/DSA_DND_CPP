@@ -1,0 +1,69 @@
+https://leetcode.com/problems/merge-k-sorted-lists/description/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class compare {
+public:
+    bool operator()(ListNode* a, ListNode* b) { return a->val > b->val; }
+};
+
+class Solution {
+public:
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue<ListNode*, vector<ListNode*>, compare> minHeap;
+        int k = lists.size();
+
+        for (int i = 0; i < k; i++) {
+            if(lists[i]) {
+                minHeap.push(lists[i]);
+            }            
+        }
+        ListNode *head = NULL, *tail = NULL;
+        while (!minHeap.empty()) {
+            ListNode* top = minHeap.top();
+            minHeap.pop();
+            if (top->next) {
+                minHeap.push(top->next);
+            }
+
+            if (head == NULL) {
+                head = top;
+                tail = top;
+            } else {
+                tail->next = top;
+                tail = top;
+            }
+        }
+        return head;
+
+        // ListNode *head, *ans;
+        // vector<int> v;
+        // for(ListNode *p : lists) {
+        //     while(p) {
+        //         v.push_back(p -> val);
+        //         p = p -> next;
+        //     }
+        // }
+        // sort(v.begin(), v.end());
+        // ListNode *ans;
+        // if(!v.size()) {
+        //     return ans;
+        // }
+        //  = new ListNode(v[0]);
+        // ListNode *head = ans;
+        // for(int i = 1; i < v.size(); i++) {
+        //     ListNode *temp = new ListNode(v[i]);
+        //     head -> next = temp;
+        //     head = temp;
+        // }
+        // return ans;
+    }
+};
