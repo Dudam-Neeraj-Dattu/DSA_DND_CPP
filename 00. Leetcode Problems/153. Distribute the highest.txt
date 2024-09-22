@@ -1,0 +1,28 @@
+Ninja and his team just discovered the lost treasure of Ninja city. The treasure consists of ‘N’ boxes, and each box contains gold coins.
+
+They want to distribute the treasure equally among the team. If any teammate gets more coins than another, they become unhappy. So the team gave Ninja a task. They want a contiguous segment of boxes such that after the distribution of coins, no teammate is unhappy, and each teammate receives maximum coins.
+
+You are given two integers ‘N’ and ‘M’ denoting the number of boxes and the team's size, respectively, and an array ‘ARR’ of size ‘N’ where ‘ARR[i]’ denotes the number of the coin in ‘ith’ Box.
+
+Example :
+N = 5 ,  M = 2
+ARR = [ 1, 2, 3, 4, 5 ]
+The ninja will choose subarray [ 2, 3, 4, 5 ]. After equal distribution, each teammate receives ‘7’ coins, so the answer is ‘7’. 
+
+----code------
+
+#include <bits/stdc++.h> 
+long long int happyDistribution(int n, int m, vector < int > &arr) {
+   // Write your code here.
+   long long int ans = 0;
+   for(int i = 0; i < arr.size(); i++) {
+      long long int sum = 0;
+      for(int j = i; j < arr.size(); j++) {
+         sum += arr[j];
+         if(sum % m == 0) {
+            ans = max(ans, sum / m);
+         }
+      }
+   }
+   return ans;
+}

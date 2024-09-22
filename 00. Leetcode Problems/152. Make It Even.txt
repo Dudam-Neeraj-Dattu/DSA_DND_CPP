@@ -1,0 +1,26 @@
+You are the most disciplined ninja of Leaf Village. You love when an array is also ‘Disciplined.’ An array is considered ‘Disciplined’ when all array elements are EVEN.
+
+You are given an integer ‘N’ and an array ‘ARR’ consisting of ‘N’ integers. Your task is to convert ‘ARR’ into a ‘Disciplined’ array with the following moves.
+
+In one move you can pick any index ‘i’ (0 <= i <= ‘N-1’) and increment the ‘i-th’ element of ‘ARR’ by 1. Find the minimum number of moves required to convert ‘ARR’ into ‘Disciplined’ array.
+
+Example :
+N = 4    
+ARR = [ 2 , 1 , 4 , 6 ]
+
+If you increment 1 (‘i’ = 1), the array becomes [ 2, 2, 4, 6 ]. Now the array is ‘Disciplined’ because all elements are even.  So the answer is 1.
+
+
+------code------
+
+#include <bits/stdc++.h> 
+int makeItEven(int n , vector <int> &arr){
+    // Write your code here.
+    int count = 0;
+    for(int i : arr) {
+        if(i & 1) {
+            count++;
+        }
+    }
+    return count;
+}
