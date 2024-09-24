@@ -35,7 +35,7 @@ class Trie {
 
             //assumption, word will be in CAPS
 
-            int index = word[0] - 'A';
+            int index = word[0] - 'a';
             TrieNode *child;
 
             if(root -> children[index] != NULL) {
@@ -60,7 +60,7 @@ class Trie {
                 return root -> isTerminal;
             }
 
-            int index = word[0] - 'A';
+            int index = word[0] - 'a';
             TrieNode *child;
 
             if(root -> children[index] != NULL)  {
@@ -84,7 +84,7 @@ class Trie {
                 return;
             }
 
-            int index = word[0] - 'A';
+            int index = word[0] - 'a';
             TrieNode *child;
 
             if(root -> children[index] != NULL)  {
@@ -108,13 +108,14 @@ int main() {
 
     Trie *t = new Trie();
 
-    t -> insertWord("ABCD");
-    t -> insertWord("ABC");
+    t -> insertWord("geeikistest");
+    t -> insertWord("geeksforgeeks");
+    t -> insertWord("geeksfortest");
     
-    cout << "present or not " << t -> searchWord("ABC") << endl;
+    cout << "present or not " << t -> searchWord("geeksforgtest") << endl;
 
-    t -> removeWord("ABC");
+    // t -> removeWord("ABC");
 
-    cout << "present or not " << t -> searchWord("ABC") << endl;
+    cout << "present or not " << t -> searchWord("geeksfortest") << endl;
     return 0;
 }

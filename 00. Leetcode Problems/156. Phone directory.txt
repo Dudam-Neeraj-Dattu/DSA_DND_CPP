@@ -1,0 +1,160 @@
+https://www.geeksforgeeks.org/problems/phone-directory4628/1
+
+//{ Driver Code Starts
+// Initial Template for C++
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+// User function Template for C++
+
+class TrieNode {
+    public:
+        char ch;
+        TrieNode *children[26];
+        bool isTerminal;
+    
+    public:
+        TrieNode(char ch) {
+            this -> ch = ch;
+            for(int i = 0; i < 26; i++) {
+                this -> children[i] = NULL;
+            } 
+            this -> isTerminal = false;
+        }
+};
+
+
+class Trie {
+    public:
+        TrieNode *root;
+    
+    public:
+        Trie() {
+            root = new TrieNode('\0');
+        }
+        
+        void insertUtil(TrieNode *root, string word) {
+            if(word.length() == 0) {
+                root -> isTerminal = true;
+                return;
+            }
+            
+            int index = word[0] - 'a';
+            TrieNode *child;
+            
+            if(root -> children[index]) {
+                child = root -> children[index];
+            }
+            
+            else {
+                child = new TrieNode(word[0]);
+                root -> children[index] = child;
+            }
+            
+            insertUtil(child, word.substr(1));
+        }
+        
+        void insertWord(string word) {
+            insertUtil(root, word);
+        }
+        
+        void names(TrieNode *root, vector<string> &v, string s) {
+            if(root -> isTerminal) {
+                v.push_back(s);
+            }
+            for(int i = 0; i < 26; i++) {
+                TrieNode *child;
+                if(root -> children[i]) {
+                    child = root -> children[i];
+                    
+                    s += child -> ch;
+                    
+                    names(child, v, s);
+                    
+                    s.pop_back();
+                    
+                }
+            }
+            return;
+        }
+        
+        void prefixNamesUtil(TrieNode *root, vector<string> &v, string word, string s) {
+            if(word.length() == 0) {
+                if(s == "") {
+                    v.push_back("0");
+                }
+                else {
+                    names(root, v, s);
+                }
+                return;
+            }
+            
+            int index = word[0] - 'a';
+            TrieNode *child;
+            if(root -> children[index]) {
+                s += word[0];
+                child = root -> children[index];
+            }
+            else {
+                v.push_back("0");
+                return;
+            }
+            
+            prefixNamesUtil(child, v, word.substr(1), s);
+        }
+        
+        void prefixNames(vector<string> &v, string word, string s) {
+            prefixNamesUtil(root, v, word, s);
+        }
+};
+
+
+class Solution{
+public:
+    vector<vector<string>> displayContacts(int n, string contact[], string s)
+    {
+        // code here
+        vector<vector<string>> v;
+        Trie *t = new Trie();
+        for(int i = 0; i < n; i++) {
+            t -> insertWord(contact[i]);
+        }
+        
+        for(int i = 1; i <= s.length(); i++) {
+            vector<string> vv;
+            string ss = "";
+            t -> prefixNames(vv, s.substr(0, i), ss);
+            v.push_back(vv);
+        }
+        
+        return v;
+        
+    }
+};
+
+//{ Driver Code Starts.
+
+int main(){
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        string contact[n], s;
+        for(int i = 0;i < n;i++)
+            cin>>contact[i];
+        cin>>s;
+        
+        Solution ob;
+        vector<vector<string>> ans = ob.displayContacts(n, contact, s);
+        for(int i = 0;i < ans.size();i++){
+            for(auto u: ans[i])
+                cout<<u<<" ";
+            cout<<"\n";
+        }
+    }
+    return 0;
+}
+// } Driver Code Ends
