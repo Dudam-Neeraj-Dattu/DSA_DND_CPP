@@ -1,0 +1,70 @@
+https://leetcode.com/problems/sudoku-solver/
+
+class Solution {
+public:
+    pair<int, int> boxIndexGiver(int n) {
+        int a = 0, b = 0;
+        if (n >= 0 && n <= 2) {
+            a = 0;
+            b = 2;
+        } else if (n >= 3 && n <= 5) {
+            a = 3;
+            b = 5;
+        } else {
+            a = 6;
+            b = 8;
+        }
+        return make_pair(a, b);
+    }
+
+    bool isSafe(vector<vector<char>>& board, char ch, int row, int col) {
+        // row check
+        for (int i = 0; i < 9; i++) {
+            if (board[row][i] == ch) {
+                return false;
+            }
+        }
+
+        // col check
+        for (int i = 0; i < 9; i++) {
+            if (board[i][col] == ch) {
+                return false;
+            }
+        }
+
+        // miniGrid check
+        pair<int, int> r = boxIndexGiver(row);
+        pair<int, int> c = boxIndexGiver(col);
+        for (int i = r.first; i <= r.second; i++) {
+            for (int j = c.first; j <= c.second; j++) {
+                if (board[i][j] == ch) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    bool solve(vector<vector<char>>& board) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    for (char k = '1'; k <= '9'; k++) {
+                        if (isSafe(board, k, i, j)) {
+                            board[i][j] = k;
+                            if (solve(board)) {
+                                return true;
+                            } else {
+                                board[i][j] = '.';
+                            }
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    void solveSudoku(vector<vector<char>>& board) { solve(board); }
+};
