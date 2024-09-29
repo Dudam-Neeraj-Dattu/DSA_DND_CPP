@@ -1,0 +1,33 @@
+https://www.geeksforgeeks.org/problems/depth-first-traversal-for-a-graph/1
+
+class Solution {
+  public:
+    // Function to return a list containing the DFS traversal of the graph.
+    void solve(int &V, vector<int> &v, vector<int> adj[], vector<int> &ans, int node) {
+        if(!v[node]) {
+            ans.push_back(node);
+            v[node] = 1;
+        }
+        for(int i = 0; i < adj[node].size(); i++) {
+            if(!v[adj[node][i]]) {
+                ans.push_back(adj[node][i]);
+                v[adj[node][i]] = 1;
+                solve(V, v, adj, ans, adj[node][i]);
+            }
+        }
+    }
+    
+    vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        // Code here
+        vector<int> v(V, 0);
+        vector<int> ans;
+        for(int i = 0; i < V; i++) {
+            if(!v[i]) {
+                ans.push_back(i);
+                v[i] = 1;
+                solve(V, v, adj, ans, i);
+            }
+        }
+        return ans;
+    }
+};
