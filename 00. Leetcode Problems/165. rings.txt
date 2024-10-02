@@ -1,0 +1,81 @@
+https://open.kattis.com/problems/rings
+
+#include<bits/stdc++.h>
+
+using namespace std;
+
+bool overlap(vector<double>& ring1, vector<double>& ring2) {
+    double dx = ring1[0] - ring2[0];
+    double dy = ring1[1] - ring2[1];
+    double distance = sqrt(dx * dx + dy * dy);
+    double r1 = ring1[2];
+    double r2 = ring2[2];
+    return (abs(r1 - r2) < distance && distance < (r1 + r2));
+}
+
+void dfs(int node, vector<int> &visited, vector<int> adj[], int &currLength) {
+    for(int i : adj[node]) {
+        if(!visited[i]) {
+            currLength++;
+            visited[i] = 1;
+            dfs(i, visited, adj, currLength);
+        }
+    }
+}
+
+int solve(vector<vector<double>> &v) {
+    vector<int> adj[v.size()];
+    for(int i = 0; i < v.size(); i++) {
+        for(int j = 0; j < v.size(); j++) {
+            if(j != i) {
+                if(overlap(v[i], v[j])) {
+                    adj[i].push_back(j);
+                }
+            }
+        }
+    }
+
+    vector<int> visited(v.size(), 0);
+    int rings = 0;
+    for(int i = 0; i < v.size(); i++) {
+        int currLength = 0;
+        if(!visited[i]) {
+            visited[i] = 1;
+            currLength++;
+            dfs(i, visited, adj, currLength);
+        }
+        rings = max(rings, currLength);
+    }
+
+    return rings;
+}
+
+int main() {
+
+    while(true) {
+        int n;
+        cin >> n;
+        if(n == -1) {
+            break;
+        }
+        else {
+            vector<vector<double>> v(n, vector<double> (3, 0.0));
+            int i = 0;
+            while(n--) {
+                cin >> v[i][0] >> v[i][1] >> v[i][2];
+                i++;
+            }
+            int rings = solve(v);
+            cout << "The largest component contains " << rings;
+            if(rings == 1) {
+                cout << " ring." << endl;
+            }
+            else {
+                cout << " rings." << endl;
+            }
+            
+        }
+    }
+
+    return 0;
+}
