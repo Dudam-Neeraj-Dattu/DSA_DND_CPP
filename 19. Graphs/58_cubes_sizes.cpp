@@ -2,10 +2,8 @@
 
 using namespace std;
 
-void dfs(int node, vector<int> adj[], vector<int> &size, vector<int> &visited, 
-         int k, vector<int> &curr) {    
+void dfs(int node, vector<int> adj[], vector<int> &size, int k, vector<int> &curr) {    
     curr[0]++;
-    visited[node] = 1;
     curr[1] += size[node];
     if(curr[0] == k) {
         return;
@@ -15,12 +13,9 @@ void dfs(int node, vector<int> adj[], vector<int> &size, vector<int> &visited,
         return;
     }    
     for(int i : adj[node]) {
-        // if(!visited[i]) {
-            dfs(i, adj, size, visited, k, curr);
-            visited[i] = 0;
-            curr[1] -= size[i];
-            curr[0]--;
-        // }
+        dfs(i, adj, size, k, curr);
+        curr[1] -= size[i];
+        curr[0]--;
     }   
 }
 
@@ -30,8 +25,7 @@ int shortestHeight(int V, vector<int> adj[], vector<int> &size, int k) {
     //curr[1] = current Height
     //curr[2] = shortest Height
     vector<int> path;
-    vector<int> visited(V, 0);
-    dfs(0, adj, size, visited, k, curr);
+    dfs(0, adj, size, k, curr);
     return curr[2];
 }
 
@@ -45,7 +39,7 @@ int main() {
     adj[3] = {0, 1, 2};
     adj[4] = {1};
     int V = 5;
-    int k = 2;
+    int k = 4;
     cout << shortestHeight(V, adj, size, k);
     return 0;
 }
