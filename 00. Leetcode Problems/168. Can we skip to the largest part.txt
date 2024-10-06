@@ -1,0 +1,60 @@
+Ninja is travelling the great desert. While travelling, he found an array of integers. He kept the array in the bag and kept walking.
+
+Ninja calls a subarray large if the sum of its elements is larger than the array itself.
+
+You are given an integer ‘N’ denoting the size of the array and an array ‘ARR’ containing ‘N’ integers. Your task is to tell Ninja if any ‘LARGE’ subarray exists in array ‘ARR’.
+
+Note :
+
+Subarray: A subarray is a contiguous part of an array. Example ARR [ 1, 2, 3, 4 ], where [ 1, 2 ] and [ 2, 3, 4 ] are subarray of ‘ARR’ but [ 2, 4 ] is not.
+Example :
+N = 3 
+ARR = [ -1, 2, 3 ]
+The total sum of the array is 4 ( -1 + 2 + 3 ), subarray [ 2, 3 ] has a sum of 5 ( 2 + 3 ), which is larger than 4, so the answer is ‘1’.
+
+
+--------approach 1 ---------O(n^2)
+#include <bits/stdc++.h> 
+int largePart(int n, vector < int > arr) {
+   // Write your code here.
+   int sum = 0;
+   for(int i : arr) {
+      sum += i;
+   }
+   for(int i = 0; i < n; i++) {
+      int currSum = 0;
+      for(int j = i; j < n; j++) {
+         currSum += arr[j];
+         if(currSum > sum) {return 1;}
+      }
+   }
+   return 0;
+}
+
+-----------approach2---------O(n)
+#include <bits/stdc++.h> 
+int largePart(int n, vector < int > arr) {
+   // Write your code here.
+   int sum = 0;
+   for(int i : arr) {
+      sum += i;
+   }
+   int i = 0, j = n - 1;
+   int currSum = sum;
+   while(i <= j) {
+      int r;
+      if(arr[i] >= arr[j]) {
+         r = arr[j];
+         j--;
+      }
+      else {
+         r = arr[i];
+         i++;
+      }
+      currSum -= r;
+      if(currSum > sum) {
+         return 1;
+      }
+   }
+   return 0;
+}
