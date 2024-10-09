@@ -1,0 +1,81 @@
+https://www.geeksforgeeks.org/problems/shortest-path-in-undirected-graph/0
+
+--------approach 1----------bfs tle
+// User function Template for C++
+class Solution {
+  public:
+     vector<int> shortestPath(int N,int M, vector<vector<int>>& edges){
+        // code here
+        vector<pair<int, int>> adj[N];
+        for(vector<int> v : edges) {
+            adj[v[0]].push_back(make_pair(v[1], v[2]));
+        }
+        
+        queue<int> q;
+        vector<int> visited(N, 0);
+        vector<int> distance(N, 0);
+        visited[0] = 1;
+        q.push(0);
+        while(!q.empty()) {
+            int front = q.front();
+            q.pop();
+            for(pair<int, int> i : adj[front]) {
+                // if(!visited[i.first]) {
+                    visited[i.first] = 1;
+                    distance[i.first] = (distance[i.first] == 0) ? distance[front] + i.second : min(distance[i.first], distance[front] + i.second);
+                    q.push(i.first);
+                // }
+            }
+        }
+        for(int i = 1; i < N; i++) {
+            if(distance[i] == 0)  {
+                distance[i] = -1;
+            }
+        }
+        return distance;
+    }
+};
+
+--------approach2--------dfs
+class Solution {
+  public:
+  
+    void dfs(int node, vector<pair<int, int>> adj[], vector<int> &visited, stack<int> &s) {
+        visited[node] = 1;
+        for(pair<int, int> i : adj[node]) {
+            if(!visited[i.first]) {
+                visited[i.first] = 1;
+                dfs(i.first, adj, visited, s);
+            }
+        }
+        s.push(node);
+    }
+  
+     vector<int> shortestPath(int N,int M, vector<vector<int>>& edges){
+        // code here
+        vector<pair<int, int>> adj[N];
+        for(vector<int> v : edges) {
+            adj[v[0]].push_back(make_pair(v[1], v[2]));
+        }
+        
+        vector<int> distance(N, -1);
+        distance[0] = 0;
+        vector<int> visited(N, 0);
+        // visited[0] = 1
+        stack<int> s;
+        dfs(0, adj, visited, s);
+        while(!s.empty()) {
+            int top = s.top();
+            s.pop();
+            for(pair<int, int> i : adj[top]) {
+                if(distance[i.first] == -1) {
+                    distance[i.first] = distance[top] + i.second;
+                }
+                else if(distance[i.first] > 0) {
+                    distance[i.first] = min(distance[i.first], distance[top] + i.second);
+                }
+            }
+        }
+        return distance;
+    }
+};
