@@ -1,0 +1,60 @@
+https://www.geeksforgeeks.org/problems/implementing-dijkstra-set-1-adjacency-matrix/1
+
+------using prioriyt_queue----------
+
+vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+{
+    // Code here
+    vector<int> distance(V, INT_MAX);
+    distance[S] = 0;
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> p;
+    p.push(make_pair(0, S));
+    while (!p.empty())
+    {
+        pair<int, int> top = p.top();
+        p.pop();
+        for (vector<int> v : adj[top.second])
+        {
+            if (top.first + v[1] < distance[v[0]])
+            {
+                distance[v[0]] = top.first + v[1];
+                p.push(make_pair(distance[v[0]], v[0]));
+            }
+        }
+    }
+    return distance;
+}
+
+---------using set-----------
+vector<int> dijkstra(int V, vector<vector<int>> adj[], int S)
+{
+    // Code here
+    vector<int> distance(V, INT_MAX);
+    distance[S] = 0;
+    set<pair<int, int>> s;
+    s.insert(make_pair(0, S));
+    while (!s.empty())
+    {
+        auto top = *s.begin();
+        int nodeDistance = top.first;
+        int node = top.second;
+        s.erase(s.begin());
+        for (vector<int> v : adj[top.second])
+        {
+            if (top.first + v[1] < distance[v[0]])
+            {
+
+                auto f = s.find(make_pair(distance[v[0]], v[0]));
+
+                if (f != s.end())
+                {
+                    s.erase(f);
+                }
+
+                distance[v[0]] = top.first + v[1];
+                s.insert(make_pair(distance[v[0]], v[0]));
+            }
+        }
+    }
+    return distance;
+}
