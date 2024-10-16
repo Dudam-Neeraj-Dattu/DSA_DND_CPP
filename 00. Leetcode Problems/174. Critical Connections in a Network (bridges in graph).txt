@@ -1,0 +1,46 @@
+https://leetcode.com/problems/critical-connections-in-a-network/description/
+
+class Solution {
+public:
+
+    void dfs(int node, int parent, vector<int> &disc, vector<int> &low, vector<int> &visited, vector<vector<int>> &v, int &timer, vector<int> adj[]) {
+        visited[node] = 1;
+        disc[node] = low[node] = timer++;
+        for(int i : adj[node]) {
+            if(i == parent) {
+                continue;
+            }
+            if(!visited[i]) {
+                dfs(i, node, disc, low, visited, v, timer, adj);
+                low[node] = min(low[node], low[i]);
+                if(low[i] > disc[node]) {
+                    vector<int> vv = {node, i};
+                    v.push_back(vv);
+                }
+            }
+            else {
+                low[node] = min(low[node], disc[i]);
+            }
+
+        }
+    }
+
+    vector<vector<int>> criticalConnections(int n, vector<vector<int>>& connections) {
+        vector<int> adj[n];
+        for(vector<int> i : connections) {
+            adj[i[0]].push_back(i[1]);
+            adj[i[1]].push_back(i[0]);
+        }
+
+        vector<int> disc(n), low(n), visited(n, 0);
+        int parent = -1;        
+        vector<vector<int>> v;
+        for(int i = 0; i < n; i++) {
+            if(!visited[i]) {
+                int timer = 0;
+                dfs(i, parent, disc, low, visited, v, timer, adj);
+            }
+        }
+        return v;
+    }
+};
