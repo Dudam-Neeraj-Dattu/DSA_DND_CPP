@@ -1,0 +1,53 @@
+https://www.geeksforgeeks.org/problems/articulation-point-1/1
+
+class Solution {
+  public:
+    
+    void dfs(int node, int parent, vector<int> &disc, vector<int> &low, vector<int> &visited, vector<int> &ap, int &timer, vector<int> adj[]) {
+        visited[node] = 1;
+        disc[node] = low[node] = timer++;
+        int child = 0;
+        for(int i : adj[node]) {
+            if(i == parent) {
+                continue;
+            }
+            if(!visited[i]) {
+                dfs(i, node, disc, low, visited, ap, timer, adj);
+                low[node] = min(low[node], low[i]);
+                if(low[i] >= disc[node] && parent != -1) {
+                    ap[node] = 1;
+                }
+                child++;
+            }
+            else {
+                low[node] = min(low[node], disc[i]);
+            }
+        }
+        if(parent == -1 && child > 1) {
+            ap[node] = 1;
+        }
+        
+    }
+  
+    vector<int> articulationPoints(int V, vector<int>adj[]) {
+        // Code here
+        vector<int> disc(V, -1), low(V, -1), visited(V, 0), ap(V, 0);
+        int parent = -1; 
+        int timer = 0;
+        for(int i = 0; i < V; i++) {
+            if(!visited[i]) {
+                dfs(i, parent, disc, low, visited, ap, timer, adj);
+            }
+        }
+        vector<int> ans;
+        for(int i = 0; i < V; i++) {
+            if(ap[i]) {
+                ans.push_back(i);
+            }
+        }
+        if(ans.size() == 0) {
+            ans.push_back(-1);
+        }
+        return ans;
+    }
+};
