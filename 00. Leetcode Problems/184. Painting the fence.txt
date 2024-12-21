@@ -1,0 +1,27 @@
+https://www.geeksforgeeks.org/problems/painting-the-fence3727/1
+
+https://www.youtube.com/watch?v=ju8vrEAsa3Q
+
+class Solution { 
+  private:
+    pair<int, int> solve(int n, int k, unordered_map<int, pair<int, int>> &u) {
+        if(n == 2) {
+            return {k, k * (k - 1)};
+        }
+        if(u.count(n)) {
+            return u[n];
+        }
+        pair<int, int> p = solve(n - 1, k, u);
+        u[n] = {p.second, (p.first + p.second) * (k - 1)};
+        return u[n];
+    }
+  public:
+    int countWays(int n, int k) {
+        if(n == 1) {
+            return k;
+        }
+        unordered_map<int, pair<int, int>> u;
+        pair<int, int> p = solve(n, k, u);
+        return p.first + p.second;
+    }
+};

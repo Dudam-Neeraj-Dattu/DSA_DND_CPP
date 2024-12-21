@@ -1,0 +1,31 @@
+https://www.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1
+
+class Solution {
+    
+  private:
+    int solve(vector<int> &val, vector<int> &weight, int index, int capacity, vector<vector<int>> &dp) {
+        if(index == 0) {
+            if(weight[0] <= capacity) {
+                return val[0];
+            }
+            return 0;
+        }
+        if(dp[index][capacity] != -1) {
+            return dp[index][capacity];
+        }
+        int include = 0, exclude = 0;
+        if(weight[index] <= capacity) {
+            include = val[index] + solve(val, weight, index - 1, capacity - weight[index], dp);
+        }
+        exclude = solve(val, weight, index - 1, capacity, dp);
+        dp[index][capacity] = max(include, exclude);
+        return dp[index][capacity];
+    }
+  public: 
+    // Function to return max value that can be put in knapsack of capacity.
+    int knapSack(int capacity, vector<int> &val, vector<int> &wt) {
+        // code here
+        vector<vector<int>> dp(val.size(), vector<int> (capacity + 1, -1));
+        return solve(val, wt, val.size() - 1, capacity, dp);
+    }
+};
