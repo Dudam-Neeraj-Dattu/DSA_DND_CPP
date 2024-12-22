@@ -1,5 +1,9 @@
 https://www.geeksforgeeks.org/problems/0-1-knapsack-problem0945/1
 
+https://youtu.be/GqOmJHQZivw?si=6YHcWw00ATuWVd0v
+
+----memoisation-----
+
 class Solution {
     
   private:
@@ -27,5 +31,30 @@ class Solution {
         // code here
         vector<vector<int>> dp(val.size(), vector<int> (capacity + 1, -1));
         return solve(val, wt, val.size() - 1, capacity, dp);
+    }
+};
+
+--------tabulation-------
+class Solution {
+
+  public: 
+    // Function to return max value that can be put in knapsack of capacity.
+    int knapSack(int capacity, vector<int> &val, vector<int> &wt) {
+        // code here
+        vector<vector<int>> dp(val.size(), vector<int> (capacity + 1, 0));
+        for(int i = wt[0]; i <= capacity; i++) {
+            dp[0][i] = val[0];
+        }
+        for(int i = 1; i < val.size(); i++) {
+            for(int j = 0; j <= capacity; j++) {
+                int include = 0, exclude = 0;
+                if(wt[i] <= j) {
+                    include = val[i] + dp[i - 1][j - wt[i]];
+                }
+                exclude = dp[i - 1][j];
+                dp[i][j] = max(include, exclude);
+            }
+        }
+        return dp[val.size() - 1][capacity];
     }
 };
