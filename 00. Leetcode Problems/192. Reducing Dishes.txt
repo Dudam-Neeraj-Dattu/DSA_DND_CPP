@@ -1,0 +1,79 @@
+https://leetcode.com/problems/reducing-dishes
+
+----brute------
+class Solution {
+public:
+    int solve(vector<int> &v, int index, int dishes) {
+        if(index == v.size()) {
+            return 0;
+        }
+        int include, exclude;
+        exclude = solve(v, index + 1, dishes);
+        include = v[index] * dishes + solve(v, index + 1, dishes + 1);
+        return max(include, exclude);
+    }
+    int maxSatisfaction(vector<int>& v) {
+        sort(v.begin(), v.end());
+        return solve(v, 0, 1);
+    }
+};
+
+
+
+----memoisation-------
+class Solution {
+public:
+    int solve(vector<int> &v, int index, int dishes, vector<vector<int>> &dp) {
+        if(index == v.size()) {
+            return 0;
+        }
+        if(dp[index][dishes] != -1) {
+            return dp[index][dishes];
+        }
+        int include, exclude;
+        exclude = solve(v, index + 1, dishes, dp);
+        include = v[index] * dishes + solve(v, index + 1, dishes + 1, dp);
+        dp[index][dishes] = max(include, exclude);
+        return dp[index][dishes];
+    }
+    int maxSatisfaction(vector<int>& v) {
+        sort(v.begin(), v.end());
+        vector<vector<int>> dp(v.size(), vector<int> (v.size() + 1, -1));
+        return solve(v, 0, 1, dp);
+    }
+};
+
+---------tabulation---------
+class Solution {
+public:
+    int maxSatisfaction(vector<int>& v) {
+        sort(v.begin(), v.end());
+        vector<vector<int>> dp(v.size() + 1, vector<int> (v.size() + 1, 0));
+        for(int i = 0; i < v.size(); i++) {
+            dp[v.size()][i] = 0;
+            dp[i][v.size()] = 0;
+        }
+        for(int dishes = v.size() - 1; dishes >= 0; dishes--) {
+            for(int index = v.size() - 1; index >= 0; index--) {
+                dp[dishes][index] = max(dp[dishes][index + 1], ((v[index] * (dishes + 1)) + dp[dishes + 1][index + 1]));
+            }
+        }
+        return dp[0][0];
+    }
+};
+
+-----------space optimisation---------
+class Solution {
+public:
+    int maxSatisfaction(vector<int>& v) {
+        sort(v.begin(), v.end());
+        vector<int> prev(v.size() + 1, 0), curr(v.size() + 1, 0);
+        for(int dishes = v.size() - 1; dishes >= 0; dishes--) {
+            for(int index = v.size() - 1; index >= 0; index--) {
+                curr[index] = max(curr[index + 1], ((v[index] * (dishes + 1)) + prev[index + 1]));
+            }
+            prev = curr;
+        }
+        return prev[0];
+    }
+};
