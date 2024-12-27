@@ -1,0 +1,122 @@
+https://leetcode.com/problems/longest-increasing-subsequence
+
+-------brute--------
+class Solution {
+  public:
+    // Function to find length of longest increasing subsequence.
+    
+    void solve(vector<int>& arr, int index, int &maxi, vector<int> ans) {
+        if(index == arr.size()) {
+            int length = ans.size() - 1;
+            maxi = max(maxi, length);
+            return;
+        }
+        solve(arr, index + 1, maxi, ans);
+        if(arr[index] > ans.back()) {
+            ans.push_back(arr[index]);
+            solve(arr, index + 1, maxi, ans);
+        }
+    }
+    
+    int longestSubsequence(vector<int>& arr) {
+        // code here
+        int maxi = 0;
+        vector<int> ans;
+        ans.push_back(-1);
+        solve(arr, 0, maxi, ans);
+        return maxi;
+    }
+};
+
+----brute2--------
+class Solution {
+  public:
+    // Function to find length of longest increasing subsequence.
+    
+    int solve(vector<int>& arr, int curr, int prev) {
+        if(curr == arr.size()) {
+            return 0;
+        }
+        int notTake = 0, take = 0;
+        notTake = solve(arr, curr + 1, prev);
+        if(prev == -1 || arr[curr] > arr[prev]) {
+            take = 1 + solve(arr, curr + 1, curr);
+        }
+        return max(take, notTake);
+    }
+    
+    int longestSubsequence(vector<int>& arr) {
+        // code here
+        return solve(arr, 0, -1);
+    }
+};
+
+------memoisation-----
+class Solution {
+public:
+    int solve(vector<int>& arr, int curr, int prev, vector<vector<int>>& dp) {
+        if (curr == arr.size()) {
+            return 0;
+        }
+        if (dp[curr][prev + 1] != -1) {
+            return dp[curr][prev + 1];
+        }
+        int notTake = 0, take = 0;
+        notTake = solve(arr, curr + 1, prev, dp);
+        if (prev == -1 || arr[curr] > arr[prev]) {
+            take = 1 + solve(arr, curr + 1, curr, dp);
+        }
+        dp[curr][prev + 1] = max(take, notTake);
+        return dp[curr][prev + 1];
+    }
+    int lengthOfLIS(vector<int>& arr) {
+        vector<vector<int>> dp(arr.size(), vector<int> (arr.size() + 1, -1));
+        return solve(arr, 0, -1, dp);
+    }
+};
+
+------tabulation-------
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+        for (int curr = n - 1; curr >= 0; curr--) {
+            for (int prev = curr - 1; prev >= -1; prev--) {
+                int notTake = 0, take = 0;
+                if (prev == -1 || arr[curr] > arr[prev]) {
+                    take = 1 + dp[curr + 1][curr + 1];
+                }
+                notTake = dp[curr + 1][prev + 1];
+
+                dp[curr][prev + 1] = max(take, notTake);
+            }
+        }
+
+        return dp[0][0];
+    }
+};
+
+-------space optimised n^2 to n--------
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+        vector<int> current(n + 1, 0), next(n + 1, 0);
+        for (int curr = n - 1; curr >= 0; curr--) {
+            for (int prev = curr - 1; prev >= -1; prev--) {
+                int notTake = 0, take = 0;
+                if (prev == -1 || arr[curr] > arr[prev]) {
+                    take = 1 + next[curr + 1];
+                }
+                notTake = next[prev + 1];
+
+                current[prev + 1] = max(take, notTake);
+            }
+            next = current;
+        }
+
+        return next[0];
+    }
+};
