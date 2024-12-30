@@ -1,0 +1,31 @@
+https://leetcode.com/problems/russian-doll-envelopes
+
+class Solution {
+public:
+    int maxEnvelopes(vector<vector<int>>& envelopes) {
+        // Step 1: Sort envelopes
+        sort(envelopes.begin(), envelopes.end(), [](const vector<int>& a, const vector<int>& b) {
+            // Sort by width ascending, and by height descending if widths are the same
+            return a[0] < b[0] || (a[0] == b[0] && a[1] > b[1]);
+        });
+
+        // Step 2: Extract heights
+        vector<int> heights;
+        for (const auto& envelope : envelopes) {
+            heights.push_back(envelope[1]);
+        }
+
+        // Step 3: Find LIS on heights
+        vector<int> lis;
+        for (int h : heights) {
+            auto it = lower_bound(lis.begin(), lis.end(), h); // Find the position to replace or extend
+            if (it == lis.end()) {
+                lis.push_back(h); // Extend LIS
+            } else {
+                *it = h; // Replace in LIS
+            }
+        }
+
+        return lis.size();
+    }
+};

@@ -97,7 +97,7 @@ public:
     }
 };
 
--------space optimised n^2 to n--------
+-------space optimised n^2 to 2n--------
 class Solution {
 public:
     int lengthOfLIS(vector<int>& arr) {
@@ -118,5 +118,42 @@ public:
         }
 
         return next[0];
+    }
+};
+
+--------------space optimised 2n to n----------
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& arr) {
+        int n = arr.size();
+        int ans = 1;
+        vector<int> dp(n, 1);
+        for(int i = 1; i < n; i++) {
+            for(int j = 0; j < i; j++) {
+                if(arr[j] < arr[i]) {
+                    dp[i] = max(dp[i], dp[j] + 1);
+                }
+            }
+            ans = max(ans, dp[i]);
+        }
+        return ans;
+    }
+};
+
+-----TC optimised nlogn--------
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& arr) {
+        vector<int> v;
+        v.push_back(arr[0]);
+        for(int i = 1; i < arr.size(); i++) {
+            if(arr[i] <= v.back()) {
+                v[lower_bound(v.begin(), v.end(), arr[i]) - v.begin()] = arr[i];
+            }
+            else {
+                v.push_back(arr[i]);
+            }
+        }
+        return v.size();
     }
 };
