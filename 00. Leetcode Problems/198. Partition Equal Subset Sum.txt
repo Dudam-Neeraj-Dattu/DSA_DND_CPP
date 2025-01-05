@@ -1,0 +1,203 @@
+https://leetcode.com/problems/partition-equal-subset-sum
+
+-------memoisation1---------
+class Solution {
+public:
+    bool solve(vector<int>& nums, int index, int sum1, int sum2,
+               vector<vector<vector<int>>>& dp) {
+        if (index == nums.size()) {
+            return (sum1 == sum2);
+        }
+        if (dp[index][sum1][sum2] != -1) {
+            return dp[index][sum1][sum2];
+        }
+        dp[index][sum1][sum2] =
+            (solve(nums, index + 1, sum1 + nums[index], sum2, dp) ||
+             solve(nums, index + 1, sum1, sum2 + nums[index], dp));
+        return dp[index][sum1][sum2];
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        int n = nums.size();
+        vector<vector<vector<int>>> dp(
+            n, vector<vector<int>>(sum, vector<int>(sum, -1)));
+        return solve(nums, 0, 0, 0, dp);
+    }
+};
+
+
+------tabulation1-------
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if(sum & 1) {
+            return false;
+        }
+        int n = nums.size();
+        int target = sum / 2;
+
+        vector<vector<vector<bool>>> dp(
+            n + 1, vector<vector<bool>>(target + 1, vector<bool>(target + 1, false))
+        );
+
+        dp[0][0][0] = true;
+
+        for (int index = 0; index < n; ++index) {
+            for (int sum1 = 0; sum1 <= target; ++sum1) {
+                for (int sum2 = 0; sum2 <= target; ++sum2) {
+                    if (dp[index][sum1][sum2]) {
+                        if (sum1 + nums[index] <= target) {
+                            dp[index + 1][sum1 + nums[index]][sum2] = true;
+                        }
+                        if (sum2 + nums[index] <= target) {
+                            dp[index + 1][sum1][sum2 + nums[index]] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return dp[n][target][target];
+    }
+};
+
+------------space optimiseated1 3D to 2D-----------
+class Solution {
+  public:
+    bool equalPartition(vector<int>& nums) {
+        // code here
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if(sum & 1) {
+            return false;
+        }
+        int n = nums.size();
+        int target = sum / 2;
+
+        vector<vector<bool>> curr(target + 1, vector<bool>(target + 1, false));                
+        curr[0][0] = true;
+
+        for (int index = 0; index < n; ++index) {
+            vector<vector<bool>> next = curr;
+            for (int sum1 = 0; sum1 <= target; ++sum1) {
+                for (int sum2 = 0; sum2 <= target; ++sum2) {
+                    if (curr[sum1][sum2]) {
+                        if (sum1 + nums[index] <= target) {
+                            next[sum1 + nums[index]][sum2] = true;
+                        }
+                        if (sum2 + nums[index] <= target) {
+                            next[sum1][sum2 + nums[index]] = true;
+                        }
+                    }
+                }
+            }
+            curr = next;
+        }
+
+        return curr[target][target];
+    }
+};
+
+
+---------memoisation2----------
+class Solution {
+public:
+    bool solve(vector<int>& nums, int index, int sum, int target,
+               vector<vector<int>>& dp) {
+        if (index == nums.size()) {
+            return (sum == target);
+        }
+        if (sum == target) {
+            return true;
+        }
+        if (dp[index][sum] != -1) {
+            return dp[index][sum];
+        }
+        dp[index][sum] =
+            (solve(nums, index + 1, sum, target, dp) ||
+             solve(nums, index + 1, sum + nums[index], target, dp));
+        return dp[index][sum];
+    }
+
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if (sum & 1)
+            return false;
+        int target = sum / 2;
+        int n = nums.size();
+        vector<vector<int>> dp(n, vector<int>(sum + 1, -1));
+        return solve(nums, 0, 0, target, dp);
+    }
+};
+
+---------tabulation2---------
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if (sum & 1)
+            return false;
+        int target = sum / 2;
+        int n = nums.size();
+        vector<vector<bool>> dp(n + 1, vector<bool>(target + 1, false));
+        dp[0][0] = true;
+        for(int index = 1; index <= n; index++) {
+            for(int sum = 0; sum <= target; sum++) {
+                bool a = false, b = false;
+                a = dp[index - 1][sum];
+                if(sum - nums[index - 1] >= 0) {
+                    b = dp[index - 1][sum - nums[index - 1]];
+                }
+                dp[index][sum] = a || b;
+            }
+        }
+        return dp[n][target];
+    }
+};
+
+--------space optimiseated2 2D to 1D-----
+class Solution {
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = 0;
+        for (int i : nums) {
+            sum += i;
+        }
+        if (sum & 1)
+            return false;
+        int target = sum / 2;
+        int n = nums.size();
+        vector<bool> prev(target + 1, false);
+        vector<bool> curr = prev;
+        prev[0] = true;
+        for(int index = 1; index <= n; index++) {
+            for(int sum = 0; sum <= target; sum++) {
+                bool a = false, b = false;
+                a = prev[sum];
+                if(sum - nums[index - 1] >= 0) {
+                    b = prev[sum - nums[index - 1]];
+                }
+                curr[sum] = a || b;
+            }
+            prev = curr;
+        }
+        return prev[target];
+    }
+};
+

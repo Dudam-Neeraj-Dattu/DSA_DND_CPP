@@ -1,0 +1,39 @@
+https://leetcode.com/problems/minimum-swaps-to-make-sequences-increasing
+
+--------brute recursion----------
+class Solution {
+public:
+    bool valid(vector<int>& v) {
+        for (int i = 1; i < v.size(); i++) {
+            if (v[i] <= v[i - 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    pair<int, bool> solve(vector<int>& nums1, vector<int>& nums2, int index) {
+        if (index == nums1.size()) {
+            return {0, valid(nums1) && valid(nums2)};
+        }
+        pair<int, bool> Swap, notSwap;      
+        notSwap = solve(nums1, nums2, index + 1);
+        swap(nums1[index], nums2[index]);        
+        Swap = solve(nums1, nums2, index + 1);        
+        pair<int, bool> ans = {0, false};
+        if(notSwap.second && Swap.second) {
+            ans.first = min(notSwap.first, 1 + Swap.first);
+            ans.second = true;
+        }
+        else {
+            if(notSwap.second) ans = notSwap;
+            if(Swap.second) {ans = Swap; ans.first++;}
+        }
+        swap(nums1[index], nums2[index]);
+        return ans;
+    }
+
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {        
+        return solve(nums1, nums2, 0).first;
+    }
+};
