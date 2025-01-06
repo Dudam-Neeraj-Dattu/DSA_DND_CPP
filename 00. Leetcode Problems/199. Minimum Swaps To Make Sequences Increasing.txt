@@ -37,3 +37,191 @@ public:
         return solve(nums1, nums2, 0).first;
     }
 };
+
+-----brute best recursion--------
+class Solution {
+public:
+
+    bool valid(int c1, int p1, int c2, int p2) {
+        return ((c1 > p1) && (c2 > p2));
+    }
+
+    int solve(vector<int>& nums1, vector<int>& nums2, int index, int prev1, int prev2) {
+        if(index == nums1.size()) {
+            return 0;
+        }
+        int curr1 = nums1[index], curr2 = nums2[index];
+        int notSwap = INT_MAX, Swap = INT_MAX;
+        if(valid(curr1, prev1, curr2, prev2)) {
+            notSwap = solve(nums1, nums2, index + 1, curr1, curr2);
+        }
+        if(valid(curr2, prev1, curr1, prev2)) {
+            Swap = 1 + solve(nums1, nums2, index + 1, curr2, curr1);
+        }
+        return min(notSwap, Swap);
+    }
+
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        return solve(nums1, nums2, 0, -1, -1);
+    }
+};
+
+---------memoisation 3d dp--------------
+class Solution {
+public:
+
+    bool valid(int c1, int p1, int c2, int p2) {
+        return ((c1 > p1) && (c2 > p2));
+    }
+
+    int solve(vector<int>& nums1, vector<int>& nums2, int index, int prev1, int prev2, vector<vector<vector<int>>> &dp) {
+        if(index == nums1.size()) {
+            return 0;
+        }
+        if(dp[index][prev1 + 1][prev2 + 1] != -1) {
+            return dp[index][prev1 + 1][prev2 + 1];
+        }
+        int curr1 = nums1[index], curr2 = nums2[index];
+        int notSwap = INT_MAX, Swap = INT_MAX;
+        if(valid(curr1, prev1, curr2, prev2)) {
+            notSwap = solve(nums1, nums2, index + 1, curr1, curr2, dp);
+        }
+        if(valid(curr2, prev1, curr1, prev2) && (curr1 != curr2)) {
+            Swap = 1 + solve(nums1, nums2, index + 1, curr2, curr1, dp);
+        }
+        dp[index][prev1 + 1][prev2 + 1] = min(notSwap, Swap);
+        return dp[index][prev1 + 1][prev2 + 1];
+    }
+
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        int max1 = 0, max2 = 0;
+        for(int i = 0; i < nums1.size(); i++) {
+            max1 = max(max1, nums1[i]);
+            max2 = max(max2, nums2[i]);
+        }
+        int maxi = max(max1, max2);
+        vector<vector<vector<int>>> dp(nums1.size(), vector<vector<int>> (maxi + 2, vector<int> (maxi + 2, -1)));
+        return solve(nums1, nums2, 0, -1, -1, dp);
+    }
+};
+
+----brute 3 recursion-----
+class Solution {
+public:
+    int solve(vector<int>& nums1, vector<int>& nums2, int index, int swapped) {
+        // cout << index << " " << prev1 << " " << prev2 << endl;
+        if(index == nums1.size()) {
+            return 0;
+        }
+        int prev1 = nums1[index - 1], prev2 = nums2[index - 1];
+        int notSwap = INT_MAX, Swap = INT_MAX;
+        if(swapped) swap(prev1, prev2);
+        if(nums1[index] > prev1 && nums2[index] > prev2) {
+            notSwap = solve(nums1, nums2, index + 1, 0);
+        }
+        if(nums1[index] > prev2 && nums2[index] > prev1) {
+            Swap = 1 + solve(nums1, nums2, index + 1, 1);
+        }        
+        return min(notSwap, Swap);
+    }
+
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);
+        nums2.insert(nums2.begin(), -1);        
+        return solve(nums1, nums2, 1, 0);
+    }
+};
+
+-----memoisation3 2D----------
+class Solution {
+public:
+    int solve(vector<int>& nums1, vector<int>& nums2, int index, int swapped, vector<vector<int>> &dp) {
+        if(index == nums1.size()) {
+            return 0;
+        }
+        if(dp[index][swapped] != -1) {
+            return dp[index][swapped];
+        }
+        int prev1 = nums1[index - 1], prev2 = nums2[index - 1];
+        int notSwap = INT_MAX, Swap = INT_MAX;
+        if(swapped) swap(prev1, prev2);
+        if(nums1[index] > prev1 && nums2[index] > prev2) {
+            notSwap = solve(nums1, nums2, index + 1, 0, dp);
+        }
+        if(nums1[index] > prev2 && nums2[index] > prev1) {
+            Swap = 1 + solve(nums1, nums2, index + 1, 1, dp);
+        }        
+        dp[index][swapped] = min(notSwap, Swap);
+        return dp[index][swapped];
+    }
+
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);
+        nums2.insert(nums2.begin(), -1);        
+        int n = nums1.size();
+        vector<vector<int>> dp(n + 1, vector<int> (2, -1));
+        return solve(nums1, nums2, 1, 0, dp);
+    }
+};
+
+---------tabulation--------
+class Solution {
+public:
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);
+        nums2.insert(nums2.begin(), -1);
+        int n = nums1.size();
+        vector<vector<int>> dp(n + 1, vector<int>(2, 0));
+        for (int index = n - 1; index >= 1; index--) {
+            for (int swapped = 1; swapped >= 0; swapped--) {
+                int prev1 = nums1[index - 1], prev2 = nums2[index - 1];
+                int notSwap = INT_MAX, Swap = INT_MAX;
+                if (swapped)
+                    swap(prev1, prev2);
+                if (nums1[index] > prev1 && nums2[index] > prev2) {
+                    notSwap = dp[index + 1][0];
+                }
+                if (nums1[index] > prev2 && nums2[index] > prev1) {
+                    Swap = 1 + dp[index + 1][1];
+                }
+                dp[index][swapped] = min(notSwap, Swap);
+            }
+        }
+        return dp[1][0];
+    }
+};
+
+---------tabulation O(1) space-----------
+class Solution {
+public:
+    int minSwap(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(), -1);
+        nums2.insert(nums2.begin(), -1);
+        int n = nums1.size();
+        int next0 = 0, next1 = 0;
+        for (int index = n - 1; index >= 1; index--) {        
+            int curr0 = 0, curr1 = 0;    
+            for (int swapped = 1; swapped >= 0; swapped--) {
+                int prev1 = nums1[index - 1], prev2 = nums2[index - 1];
+                int notSwap = INT_MAX, Swap = INT_MAX;
+                if (swapped)
+                    swap(prev1, prev2);
+                if (nums1[index] > prev1 && nums2[index] > prev2) {
+                    notSwap = next0;
+                }
+                if (nums1[index] > prev2 && nums2[index] > prev1) {
+                    Swap = 1 + next1;
+                }
+                if(swapped == 0) {
+                    curr0 = min(notSwap, Swap);
+                }
+                else {
+                    curr1 = min(notSwap, Swap);
+                }                
+            }
+            next0 = curr0;
+            next1 = curr1;
+        }
+        return next0;
+    }
+};

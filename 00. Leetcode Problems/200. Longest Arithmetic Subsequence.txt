@@ -1,0 +1,76 @@
+https://leetcode.com/problems/longest-arithmetic-subsequence
+
+-----brutest brute---------
+class Solution {
+public:
+
+    bool valid(vector<int> &ans) {
+        int d = 0;
+        if(ans.size() >= 2) {
+            d = ans[1] - ans[0];
+        }
+        for(int i = 2; i < ans.size(); i++) {
+            if(ans[i] - ans[i - 1] != d) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    int solve(vector<int>& nums, int index, vector<int>& ans) {
+        if(index == nums.size()) {
+            if(valid(ans)) {
+                return ans.size();
+            }
+            return 0;
+        }
+        int include = 0, exclude = 0;
+        exclude = solve(nums, index + 1, ans);
+        ans.push_back(nums[index]);
+        include = solve(nums, index + 1, ans);
+        ans.pop_back();
+        return max(include, exclude);
+    }
+
+    int longestArithSeqLength(vector<int>& nums) {
+        vector<int> ans;
+        return solve(nums, 0, ans);
+    }
+};
+
+-------brute-----------
+class Solution {
+public:
+    int longestArithSeqLength(vector<int>& nums) {
+        unordered_set<int> u;
+        vector<vector<int>> v;
+        for(int i : nums) {
+            u.insert(i);
+        }
+        for(int i = 0; i < nums.size() - 2; i++) {
+            vector<int> temp;
+            for(int j = i + 1; j < nums.size(); j++) {
+                temp.push_back(nums[j] - nums[i]);
+            }
+            v.push_back(temp);
+        }
+        int ans = 2;
+        for(int i = 0; i < v.size(); i++) {
+            for(int j = 0; j < v[i].size(); j++) {
+                int count = 1;
+                int next = nums[i] + v[i][j];
+                while(next >= 0 && u.count(next)) {
+                    count++;
+                    next += v[i][j];
+                }
+                if(count == v[i].size() + 1) {
+                    return count;
+                }
+                ans = max(ans, count);
+            }
+        }
+        return ans;
+    }
+};
+
+
