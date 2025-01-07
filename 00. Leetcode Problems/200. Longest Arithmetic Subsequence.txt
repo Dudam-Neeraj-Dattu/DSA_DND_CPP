@@ -38,7 +38,7 @@ public:
     }
 };
 
--------brute-----------
+-------brute2-----------
 class Solution {
 public:
     int longestArithSeqLength(vector<int>& nums) {
@@ -73,4 +73,127 @@ public:
     }
 };
 
+-----brute3----------
+class Solution {
+public:
+
+    int solve(vector<int> &nums, int d, int index, int a2) {
+        if(index < 0) {
+            return 0;
+        }
+        int a1 = nums[index];
+        int count = 0;
+        if(a2 - a1 == d) {
+            count = 1 + solve(nums, d, index - 1, a1);
+        }
+        else {
+            count = solve(nums, d, index - 1, a2);
+        }
+        return count;
+    }
+
+    int longestArithSeqLength(vector<int>& nums) {
+        int ans = 2;
+        for(int i = 0; i < nums.size() - 1; i++) {
+            for(int j = i + 1; j < nums.size(); j++) {
+                int d = nums[j] - nums[i];
+                ans = max(ans, 2 + solve(nums, d, i - 1, nums[i]));
+            }
+        }
+        return ans;
+    }
+};
+----memoisation1-------
+class Solution {
+public:
+
+    int solve(vector<int> &nums, int d, int index, int a2) {
+        if(index < 0) {
+            return 0;
+        }
+        int a1 = nums[index];
+        int count = 0;
+        if(a2 - a1 == d) {
+            count = 1 + solve(nums, d, index - 1, a1);
+        }
+        else {
+            count = solve(nums, d, index - 1, a2);
+        }
+        return count;
+    }
+
+    int longestArithSeqLength(vector<int>& nums) {
+        int ans = 2;
+        vector<unordered_map<int, int>> dp(nums.size());
+        for(int i = 0; i < nums.size() - 1; i++) {
+            for(int j = i + 1; j < nums.size(); j++) {
+                int d = nums[j] - nums[i];
+                int count = 0;
+                if(dp[i].count(d)) {
+                    count = dp[i][d];
+                }
+                else {
+                    count = solve(nums, d, i - 1, nums[i]);
+                    dp[i][d] = count;
+                }
+                ans = max(ans, 2 + count);
+            }
+        }
+        return ans;
+    }
+};
+
+-----memoisation2-----------
+class Solution {
+public:
+
+    int solve(vector<int> &nums, int d, int index, vector<unordered_map<int, int>> &dp) {
+        if(index < 0) {
+            return 0;
+        }
+        if(dp[index].count(d)) return dp[index][d];
+        int a2 = nums[index];
+        int ans = 0;
+        for(int i = index - 1; i >= 0; i--) {
+            int a1 = nums[i];
+            if(a2 - a1 == d) {
+                ans = max(ans, 1 + solve(nums, d, i, dp));
+            }
+        }
+        return dp[index][d] = ans;
+    }
+
+    int longestArithSeqLength(vector<int>& nums) {
+        int ans = 2;
+        vector<unordered_map<int, int>> dp(nums.size());
+        for(int i = 0; i < nums.size() - 1; i++) {
+            for(int j = i + 1; j < nums.size(); j++) {
+                int d = nums[j] - nums[i];
+                ans = max(ans, 2 + solve(nums, d, i, dp));
+            }
+        }
+        return ans;
+    }
+};
+
+------------tabulation0---------
+class Solution {
+public:
+    int longestArithSeqLength(vector<int>& nums) {
+        int ans = 2;
+        vector<unordered_map<int, int>> dp(nums.size());
+        for(int i = 1; i < nums.size(); i++) {
+            for(int j = 0; j < i; j++) {
+                int d = nums[i] - nums[j];
+                int count = 1;
+                if(dp[j].count(d)) {
+                    count = dp[j][d];
+                }                
+                dp[i][d] = 1 + count;                
+                ans = max(ans, dp[i][d]);
+            }
+        }
+        return ans;
+    }
+};
 

@@ -1,0 +1,20 @@
+https://leetcode.com/problems/longest-arithmetic-subsequence-of-given-difference
+
+class Solution {
+public:
+    int longestSubsequence(vector<int>& nums, int d) {
+        int ans = 1;
+        unordered_map<int, int> dp;
+        for(int i = nums.size() - 1; i >= 0; i--) {
+            int ele = nums[i] + d;
+            if(dp.count(ele)) {
+                dp[nums[i]] = 1 + dp[ele];
+                ans = max(ans, dp[nums[i]] + 1);
+            }
+            else {
+                dp[nums[i]] = 0;
+            }
+        }
+        return ans;
+    }
+};
