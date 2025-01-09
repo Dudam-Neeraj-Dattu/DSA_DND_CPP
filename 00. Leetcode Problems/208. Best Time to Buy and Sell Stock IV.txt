@@ -1,0 +1,35 @@
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv
+
+
+---------same like previous buy and sell II, III just change buySells limit to k-------
+
+---------tabulation-------------
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> curr(2, vector<int>(k + 1, 0));
+        vector<vector<int>> next(2, vector<int>(k + 1, 0));
+
+        for (int index = n - 1; index >= 0; index--) {
+            for (int canBuy = 0; canBuy <= 1; canBuy++) {
+                for (int buySells = 0; buySells < k; buySells++) {
+                    int profit = 0;
+                    if (canBuy) {
+                        int buy = -prices[index] +
+                                  next[0][buySells];
+                        int skip = next[1][buySells];
+                        profit = max(buy, skip);
+                    } else {
+                        int sell = prices[index] + next[1][buySells + 1];
+                        int skip = next[0][buySells];
+                        profit = max(sell, skip);
+                    }
+                    curr[canBuy][buySells] = profit;
+                }                
+            }
+            next = curr;
+        }
+        return next[1][0];
+    }
+};

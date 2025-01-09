@@ -1,0 +1,147 @@
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii
+
+-------brute-----------
+class Solution {
+public:
+
+    int solve(vector<int> &prices, int index, int canBuy, int buySells) {
+        if(index == prices.size() || buySells >= 5)  {
+            return 0;
+        }
+        int profit = 0;
+        if(canBuy) {
+            int buy = -prices[index] + solve(prices, index + 1, 0, buySells + 1);
+            int skip = solve(prices, index + 1, 1, buySells);
+            profit = max(buy, skip);
+        }
+        else {
+            int sell = prices[index] + solve(prices, index + 1, 1, buySells + 1);
+            int skip = solve(prices, index + 1, 0, buySells);
+            profit = max(sell, skip);
+        }
+        return profit;
+    }
+
+    int maxProfit(vector<int>& prices) {
+        return solve(prices, 0, 1, 0);
+    }
+};
+
+-------------memoisation------------
+class Solution {
+public:
+
+    int solve(vector<int> &prices, int index, int canBuy, int buySells) {
+        if(index == prices.size() || buySells >= 5)  {
+            return 0;
+        }
+        int profit = 0;
+        if(canBuy) {
+            int buy = -prices[index] + solve(prices, index + 1, 0, buySells + 1);
+            int skip = solve(prices, index + 1, 1, buySells);
+            profit = max(buy, skip);
+        }
+        else {
+            int sell = prices[index] + solve(prices, index + 1, 1, buySells + 1);
+            int skip = solve(prices, index + 1, 0, buySells);
+            profit = max(sell, skip);
+        }
+        return profit;
+    }
+
+    int maxProfit(vector<int>& prices) {
+        return solve(prices, 0, 1, 0);
+    }
+};
+
+------------tabulation------------
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<vector<int>>> dp(
+            n + 1, vector<vector<int>>(2, vector<int>(6, 0)));
+
+        for (int index = n - 1; index >= 0; index--) {
+            for (int canBuy = 0; canBuy <= 1; canBuy++) {
+                for (int buySells = 0; buySells <= 4; buySells++) {
+                    int profit = 0;
+                    if (canBuy) {
+                        int buy = -prices[index] +
+                                  dp[index + 1][0][buySells + 1];
+                        int skip = dp[index + 1][1][buySells];
+                        profit = max(buy, skip);
+                    } else {
+                        int sell = prices[index] + dp[index + 1][1][buySells + 1];
+                        int skip = dp[index + 1][0][buySells];
+                        profit = max(sell, skip);
+                    }
+                    dp[index][canBuy][buySells] = profit;
+                }
+            }
+        }
+        return dp[0][1][0];
+    }
+};
+
+-----------tabulation1-------------
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> curr(2, vector<int>(6, 0));
+        vector<vector<int>> next(2, vector<int>(6, 0));
+
+        for (int index = n - 1; index >= 0; index--) {
+            for (int canBuy = 0; canBuy <= 1; canBuy++) {
+                for (int buySells = 0; buySells <= 4; buySells++) {
+                    int profit = 0;
+                    if (canBuy) {
+                        int buy = -prices[index] +
+                                  next[0][buySells + 1];
+                        int skip = next[1][buySells];
+                        profit = max(buy, skip);
+                    } else {
+                        int sell = prices[index] + next[1][buySells + 1];
+                        int skip = next[0][buySells];
+                        profit = max(sell, skip);
+                    }
+                    curr[canBuy][buySells] = profit;
+                }                
+            }
+            next = curr;
+        }
+        return next[1][0];
+    }
+};
+
+-------------tabulation2-----------
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int n = prices.size();
+        vector<vector<int>> curr(2, vector<int>(3, 0));
+        vector<vector<int>> next(2, vector<int>(3, 0));
+
+        for (int index = n - 1; index >= 0; index--) {
+            for (int canBuy = 0; canBuy <= 1; canBuy++) {
+                for (int buySells = 0; buySells <= 1; buySells++) {
+                    int profit = 0;
+                    if (canBuy) {
+                        int buy = -prices[index] +
+                                  next[0][buySells];
+                        int skip = next[1][buySells];
+                        profit = max(buy, skip);
+                    } else {
+                        int sell = prices[index] + next[1][buySells + 1];
+                        int skip = next[0][buySells];
+                        profit = max(sell, skip);
+                    }
+                    curr[canBuy][buySells] = profit;
+                }                
+            }
+            next = curr;
+        }
+        return next[1][0];
+    }
+};
