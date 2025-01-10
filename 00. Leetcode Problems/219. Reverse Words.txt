@@ -1,0 +1,29 @@
+https://www.geeksforgeeks.org/problems/reverse-words-in-a-given-string5459/1
+
+class Solution {
+  public:
+    // Function to reverse words in a given string.
+    string reverseWords(string &s) {
+        // code here
+        vector<string> v;
+        string temp = "";
+        for(char c : s) {
+            if(c != ' ') {
+                temp += c;
+            }
+            if(c == ' ' && temp != "") {
+                v.push_back(temp);
+                temp = "";
+            }
+        }
+        if(temp != "") {
+            v.push_back(temp);
+        }
+        string ans = "";
+        for(int i = v.size() - 1; i >= 0; i--) {
+            ans += v[i];
+            ans += " ";
+        }
+        return ans.substr(0, ans.length() - 1);
+    }
+};
