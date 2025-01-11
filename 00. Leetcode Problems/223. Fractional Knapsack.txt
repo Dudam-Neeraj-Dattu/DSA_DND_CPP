@@ -1,0 +1,31 @@
+https://www.geeksforgeeks.org/problems/fractional-knapsack-1587115620/1
+
+class Solution {
+  public:
+    // Function to get the maximum total value in the knapsack.
+    static bool cmp(pair<double, vector<int>> &a, pair<double, vector<int>> &b) {
+        return a.first > b.first;
+    }
+    
+    double fractionalKnapsack(vector<int>& val, vector<int>& wt, int capacity) {
+        // Your code here
+        vector<pair<double, vector<int>>> v;
+        for(int i = 0; i < val.size(); i++) {
+            double d = val[i] / (double)wt[i];
+            v.push_back({d, {val[i], wt[i]}});
+        }
+        sort(v.begin(), v.end(), cmp);
+        double total = 0;
+        for(auto i : v) {
+            if(i.second[1] > capacity) {
+                total += capacity * i.first;
+                capacity = 0;
+            }
+            else {
+                total += i.second[0];
+                capacity -= i.second[1];
+            }
+        }
+        return total;
+    }
+};

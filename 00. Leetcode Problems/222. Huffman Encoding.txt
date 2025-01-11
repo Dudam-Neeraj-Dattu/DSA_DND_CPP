@@ -1,0 +1,66 @@
+https://www.geeksforgeeks.org/problems/huffman-encoding3345/1
+
+class node {
+    public:
+        int data;
+        node* left;
+        node* right;
+    public:
+        node(int data) {
+            this -> data = data;
+            this -> left = NULL;
+            this -> right = NULL;
+        }
+};
+
+class cmp {
+    public:
+        bool operator()(node* &n1, node* &n2)   {
+            return n1 -> data > n2 -> data;
+        }
+};
+
+class Solution
+{
+    private:
+        void dfs(node *root, vector<string> &ans, string &s) {
+            if(root -> left == NULL && root -> right == NULL) {
+                ans.push_back(s);
+                return;
+            }
+            s += "0";
+            dfs(root -> left, ans, s);
+            s.pop_back();
+            s += "1";
+            dfs(root -> right, ans, s);
+            s.pop_back();
+        }
+    
+	public:
+		vector<string> huffmanCodes(string S,vector<int> f,int N)
+		{
+		    // Code here
+		    vector<string> ans;
+		    if(N == 1) {
+		        return ans;
+		    }
+		    priority_queue<node*, vector<node*>, cmp> p;
+		    for(int i = 0; i < N; i++) {
+		        node *root = new node(f[i]);
+		        p.push(root);
+		    }
+		    while(p.size() > 1) {
+		        node *l = p.top();
+		        p.pop();
+		        node *r = p.top();
+		        p.pop();
+		        node *root = new node(l->data + r->data);
+		        root -> left = l;
+		        root -> right = r;
+		        p.push(root);
+		    }
+		    string s = "";
+		    dfs(p.top(), ans, s);
+		    return ans;
+		}
+};
